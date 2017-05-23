@@ -34,6 +34,7 @@ QMap<QString,Command> s_commandMap = {
     { "dr", Command::DisableRepo },
     { "rr", Command::RemoveRepo },
     { "ur", Command::UpdateRepo },
+    { "ref", Command::UpdateRepo },
 };
 
 int main(int argc, char *argv[])
