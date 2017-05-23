@@ -7,6 +7,18 @@ PackageKitBackend::PackageKitBackend(QObject *parent) :
 {
 }
 
+PackageKit::Transaction *PackageKitBackend::mkResolveTransaction(const QString &resolveTerm, PackageKit::Transaction::Filters filters)
+{
+    PackageKit::Transaction *rpc = nullptr;
+#ifdef NEMO_PACKAGE_KIT
+    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc->resolve(resolveTerm, filters);
+#else
+    rpc = PackageKit::Daemon::resolve(resolveTerm, filters);
+#endif
+    return rpc;
+}
+
 PackageKit::Transaction *PackageKitBackend::mkSearchNameTransaction(const QString &searchTerm, PackageKit::Transaction::Filters filters)
 {
     PackageKit::Transaction *rpc = nullptr;

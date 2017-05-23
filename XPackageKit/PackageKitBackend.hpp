@@ -11,6 +11,7 @@ class PackageKitBackend : public QObject
 public:
     explicit PackageKitBackend(QObject *parent = nullptr);
 
+    static PackageKit::Transaction *mkResolveTransaction(const QString &resolveTerm, PackageKit::Transaction::Filters filters = PackageKit::Transaction::FilterNone);
     static PackageKit::Transaction *mkSearchNameTransaction(const QString &searchTerm, PackageKit::Transaction::Filters filters = PackageKit::Transaction::FilterNone);
     static PackageKit::Transaction *mkInstallPackageTransaction(const QString &packageID, PackageKit::Transaction::TransactionFlags flags = PackageKit::Transaction::TransactionFlagNone);
     static PackageKit::Transaction *mkRemovePackageTransaction(const QString &packageID, bool allowDeps = false, bool autoRemove = false, PackageKit::Transaction::TransactionFlags flags = PackageKit::Transaction::TransactionFlagNone);
