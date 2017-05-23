@@ -12,7 +12,7 @@ XPackageKitTransaction::XPackageKitTransaction(RequestType type, const QString &
 void XPackageKitTransaction::search()
 {
     qDebug() << Q_FUNC_INFO << m_name;
-    PackageKit::Transaction *rpc = PackageKitBackend::mkSearchNameTransaction(m_name,
+    PackageKit::Transaction *rpc = PackageKitBackend::mkResolveTransaction(m_name,
                                                                               PackageKit::Transaction::FilterBasename
                                                                               | PackageKit::Transaction::FilterNewest);
     connect(rpc, &PackageKit::Transaction::package, this, &XPackageKitTransaction::onSearchResult);
