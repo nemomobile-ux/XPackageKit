@@ -4,6 +4,7 @@
 
 XTransaction::XTransaction(RequestType type, QObject *parent) :
     QObject(parent),
+    m_running(false),
     m_finished(false),
     m_succeeded(true),
     m_type(type)
@@ -25,9 +26,35 @@ bool XTransaction::runAfter(XTransaction *transaction)
     return true;
 }
 
+void XTransaction::restart()
+{
+    qDebug() << Q_FUNC_INFO;
+    if (m_running) {
+        qWarning() << "Unable to restart: transaction is already running (type:" << m_type << "details:" << m_requestDetails << ")";
+        return;
+    }
+
+    if (m_finished) {
+        qDebug() << "Actually restart transaction";
+        m_finished = false;
+    }
+
+    start();
+}
+
 void XTransaction::start()
 {
     qDebug() << Q_FUNC_INFO;
+    if (m_running) {
+        qWarning() << "Unable to start: transaction is already running (type:" << m_type << "details:" << m_requestDetails << ")";
+        return;
+    }
+
+    if (m_finished) {
+        qWarning() << "Unable to start: transaction is already finished (type:" << m_type << "details:" << m_requestDetails << ")";
+        return;
+    }
+    m_running = true;
     emit started(this);
     startEvent();
 }
@@ -36,6 +63,7 @@ void XTransaction::setFinished()
 {
     qDebug() << Q_FUNC_INFO;
     m_finished = true;
+    m_running = false;
     emit finished(this);
 }
 

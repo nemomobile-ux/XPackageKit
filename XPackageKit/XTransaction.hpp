@@ -36,6 +36,7 @@ public:
 
     explicit XTransaction(RequestType type, QObject *parent = nullptr);
 
+    bool isRunning() { return m_running; }
     bool isFinished() { return m_finished; }
     bool isSucceeded() { return m_succeeded; }
 
@@ -58,6 +59,7 @@ signals:
     void succeeded();
 
 public slots:
+    void restart();
     void start();
 
 protected slots:
@@ -69,6 +71,7 @@ protected slots:
 protected:
     virtual void startEvent() = 0;
 
+    bool m_running;
     bool m_finished;
     bool m_succeeded;
 
