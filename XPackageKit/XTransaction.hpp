@@ -51,12 +51,9 @@ public:
 
 signals:
     void started(XTransaction *transaction);
-    void stepFinished();
-    void packageStatusChanged(const QString &packageName, PackageStatus);
-
     void finished(XTransaction *transaction);
     void failed(XTransaction *transaction, const QVariantMap &details);
-    void succeeded();
+    void succeeded(XTransaction *transaction);
 
 public slots:
     void restart();

@@ -64,6 +64,9 @@ void XTransaction::setFinished()
     qDebug() << Q_FUNC_INFO;
     m_finished = true;
     m_running = false;
+    if (m_succeeded) {
+        emit succeeded(this);
+    }
     emit finished(this);
 }
 
