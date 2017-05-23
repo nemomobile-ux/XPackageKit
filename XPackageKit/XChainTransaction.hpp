@@ -27,6 +27,10 @@ signals:
 protected:
     void startEvent() override;
 
+protected slots:
+    void onTransactionFinished(XTransaction *transaction);
+    void runTransactionAtIndex(int index);
+
 private:
     class Private;
     Private *d;
