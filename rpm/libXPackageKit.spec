@@ -48,7 +48,7 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/pkgconfig/XPackageKit.pc
-#%{_includedir}/libsailfishupdater/*
+%{_includedir}/XPackageKit/*
 
 %files tools
 %defattr(-,root,root,-)

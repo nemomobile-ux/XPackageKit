@@ -21,6 +21,17 @@ linux-g++ { # mer
 
 target.path = /usr/lib
 
+PUBLIC_HEADERS = \
+    XTransaction \
+    XTransaction.hpp \
+    XTransactionManager \
+    XTransactionManager.hpp \
+    XChainTransaction \
+    XChainTransaction.hpp
+
+public_headers.files = $$PUBLIC_HEADERS
+public_headers.path = /usr/include/$${TARGET}
+
 CONFIG += create_pc create_prl no_install_prl
 QMAKE_PKGCONFIG_DESCRIPTION = PackageKitQt wrapper library
 QMAKE_PKGCONFIG_LIBDIR = $$target.path
@@ -32,4 +43,4 @@ pkgconfig.path  = $${INSTALL_LIBDIR}/pkgconfig
 QMAKE_EXTRA_TARGETS += pkgconfig
 QMAKE_CLEAN += $${pkgconfig.files}
 
-INSTALLS += target
+INSTALLS += target public_headers
