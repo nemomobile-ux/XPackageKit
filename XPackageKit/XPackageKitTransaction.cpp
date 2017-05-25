@@ -3,18 +3,27 @@
 
 #include <QDebug>
 
-XPackageKitTransaction::XPackageKitTransaction(RequestType type, const QString &name, QObject *parent) :
-    XTransaction(type, parent),
-    m_name(name)
+XPackageKitTransaction::XPackageKitTransaction(RequestType type, QObject *parent) :
+    XTransaction(type, parent)
 {
+}
+
+QString XPackageKitTransaction::packageName() const
+{
+    return requestDetails().value("packageName").toString();
+}
+
+QString XPackageKitTransaction::repoName() const
+{
+    return requestDetails().value("repoName").toString();
 }
 
 void XPackageKitTransaction::search()
 {
-    qDebug() << Q_FUNC_INFO << m_name;
-    PackageKit::Transaction *rpc = PackageKitBackend::mkResolveTransaction(m_name,
-                                                                              PackageKit::Transaction::FilterBasename
-                                                                              | PackageKit::Transaction::FilterNewest);
+    qDebug() << Q_FUNC_INFO << packageName();
+    PackageKit::Transaction *rpc = PackageKitBackend::mkResolveTransaction(packageName(),
+                                                                           PackageKit::Transaction::FilterBasename
+                                                                           | PackageKit::Transaction::FilterNewest);
     connect(rpc, &PackageKit::Transaction::package, this, &XPackageKitTransaction::onSearchResult);
     connect(rpc, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onSearchTransactionFinished);
     connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
@@ -54,7 +63,7 @@ void XPackageKitTransaction::setRepoEnabled(const QString &repoName, bool enable
 XPackageKitTransaction::PackageArgs XPackageKitTransaction::getExactSearchResult() const
 {
     for (const PackageArgs args : m_searchResult) {
-        if (PackageKit::Transaction::packageName(args.packageID) == m_name) {
+        if (PackageKit::Transaction::packageName(args.packageID) == packageName()) {
             return args;
         }
     }
@@ -65,12 +74,12 @@ void XPackageKitTransaction::startEvent()
 {
     switch(type()) {
     case RefreshRepoRequest:
-        refresh(m_name);
+        refresh(repoName());
         break;
     case SetRepoEnabledRequest:
     {
         const bool enable = m_requestDetails.value(QStringLiteral("enable"), true).toBool();
-        setRepoEnabled(m_name, enable);
+        setRepoEnabled(repoName(), enable);
     }
         break;
     case InstallRequest:
@@ -95,7 +104,7 @@ void XPackageKitTransaction::onSearchResult(PackageKit::Transaction::Info info, 
 
 void XPackageKitTransaction::onSearchTransactionFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
-    qDebug() << Q_FUNC_INFO << m_name << "result:" << status << runtime;
+    qDebug() << Q_FUNC_INFO << packageName() << "result:" << status << runtime;
     PackageArgs result = getExactSearchResult();
 
     if (result.packageID.isEmpty()) {
@@ -150,7 +159,7 @@ void XPackageKitTransaction::onTransactionErrorCode(PackageKit::Transaction::Err
 void XPackageKitTransaction::onGenericTransactionFinished(PackageKit::Transaction::Exit exitStatus, uint runtime)
 {
     PackageKit::Transaction *t = qobject_cast<PackageKit::Transaction*>(sender());
-    qDebug() << Q_FUNC_INFO << m_name << "result:" << exitStatus << "runtime:" << runtime << "status" << t->status();
+    qDebug() << Q_FUNC_INFO << "result:" << exitStatus << "runtime:" << runtime << "status" << t->status();
 
     QVariantMap details = {
         {"backend_exitCode", exitStatus},

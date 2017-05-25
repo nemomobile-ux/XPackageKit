@@ -8,16 +8,19 @@
 
 #include <QDebug>
 
-
-XSsuTransaction::XSsuTransaction(XTransaction::RequestType type, const QString &name, QObject *parent) :
-    XTransaction(type, parent),
-    m_repoName(name)
+XSsuTransaction::XSsuTransaction(XTransaction::RequestType type, QObject *parent) :
+    XTransaction(type, parent)
 {
+}
+
+QString XSsuTransaction::repoName() const
+{
+    return requestDetails().value("repoName").toString();
 }
 
 void XSsuTransaction::startEvent()
 {
-    qDebug() << Q_FUNC_INFO << m_repoName << m_requestDetails;
+    qDebug() << Q_FUNC_INFO << m_requestDetails;
 
     switch (m_type) {
     case AddRepoRequest:
@@ -37,17 +40,17 @@ void XSsuTransaction::startEvent()
 void XSsuTransaction::addRepo()
 {
     const QString url = m_requestDetails.value(QStringLiteral("url")).toString();
-    if (m_repoName.isEmpty() || url.isEmpty()) {
+    if (repoName().isEmpty() || url.isEmpty()) {
         setDelayedFinishedWithError(QVariantMap({{"text", "Invalid arguments (we need repo name and repo url)"}}));
         return;
     }
 
-    callSsuMethod(QStringLiteral("addRepo"), { m_repoName, url });
+    callSsuMethod(QStringLiteral("addRepo"), { repoName(), url });
 }
 
 void XSsuTransaction::removeRepo()
 {
-    if (m_repoName.isEmpty()) {
+    if (repoName().isEmpty()) {
         setDelayedFinishedWithError(QVariantMap({{"text", "Repo name is not set"}}));
         return;
     }
@@ -72,7 +75,7 @@ void XSsuTransaction::setRepoEnabled()
 void XSsuTransaction::modifyRepo(XSsuTransaction::SsuRepoAction action)
 {
     const int actionInt = static_cast<int>(action);
-    callSsuMethod(QStringLiteral("modifyRepo"), { actionInt, m_repoName });
+    callSsuMethod(QStringLiteral("modifyRepo"), { actionInt, repoName() });
 }
 
 void XSsuTransaction::callSsuMethod(const QString &method, const QVariantList &arguments)

@@ -9,7 +9,8 @@ class XSsuTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    explicit XSsuTransaction(RequestType type, const QString &name, QObject *parent = nullptr);
+    explicit XSsuTransaction(RequestType type, QObject *parent = nullptr);
+    QString repoName() const;
 
 protected slots:
     void onSsuCallReply(QDBusPendingCallWatcher *watcher);
@@ -32,8 +33,6 @@ protected:
     void modifyRepo(SsuRepoAction action);
 
     void callSsuMethod(const QString &method, const QVariantList &arguments);
-
-    QString m_repoName;
 
 };
 

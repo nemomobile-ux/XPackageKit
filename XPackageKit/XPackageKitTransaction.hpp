@@ -9,9 +9,10 @@ class XPackageKitTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    explicit XPackageKitTransaction(RequestType type, const QString &name, QObject *parent = nullptr);
+    explicit XPackageKitTransaction(RequestType type, QObject *parent = nullptr);
 
-    QString packageName() const { return m_name; }
+    QString packageName() const;
+    QString repoName() const;
 
     struct PackageArgs {
         PackageKit::Transaction::Info info;
@@ -50,7 +51,6 @@ protected:
 protected:
     void startEvent() override;
 
-    QString m_name;
     QVector<PackageArgs> m_searchResult;
     QVector<ErrorStruct> m_errors;
 
