@@ -83,7 +83,7 @@ PackageKit::Transaction *PackageKitBackend::mkRefreshRepoTransaction(const QStri
     rpc = new PackageKit::Transaction(QDBusObjectPath());
     rpc->repoSetData(repoName, QStringLiteral("refresh-now"), QStringLiteral("true"));
 #else
-#error Not implemented yet
+    rpc = PackageKit::Daemon::repoSetData(repoName, QStringLiteral("refresh-now"), QStringLiteral("true"));
 #endif
     return rpc;
 }
