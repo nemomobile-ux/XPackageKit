@@ -9,8 +9,6 @@ class PackageKitBackend : public QObject
 {
     Q_OBJECT
 public:
-    explicit PackageKitBackend(QObject *parent = nullptr);
-
     static PackageKit::Transaction *mkResolveTransaction(const QString &resolveTerm, PackageKit::Transaction::Filters filters = PackageKit::Transaction::FilterNone);
     static PackageKit::Transaction *mkSearchNameTransaction(const QString &searchTerm, PackageKit::Transaction::Filters filters = PackageKit::Transaction::FilterNone);
     static PackageKit::Transaction *mkInstallPackageTransaction(const QString &packageID, PackageKit::Transaction::TransactionFlags flags = PackageKit::Transaction::TransactionFlagNone);

@@ -2,11 +2,6 @@
 
 #include <Daemon>
 
-PackageKitBackend::PackageKitBackend(QObject *parent) :
-    QObject(parent)
-{
-}
-
 PackageKit::Transaction *PackageKitBackend::mkResolveTransaction(const QString &resolveTerm, PackageKit::Transaction::Filters filters)
 {
     PackageKit::Transaction *rpc = nullptr;
