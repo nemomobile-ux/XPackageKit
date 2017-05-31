@@ -44,6 +44,7 @@ public:
 
     QVariantMap requestDetails() const { return m_requestDetails; }
     void setRequestDetails(const QVariantMap &details);
+    void setRequestDetail(const QString &key, const QVariant &value);
 
     RequestType type() const { return m_type; }
 

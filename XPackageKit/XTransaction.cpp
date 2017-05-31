@@ -16,6 +16,11 @@ void XTransaction::setRequestDetails(const QVariantMap &details)
     m_requestDetails = details;
 }
 
+void XTransaction::setRequestDetail(const QString &key, const QVariant &value)
+{
+    m_requestDetails.insert(key, value);
+}
+
 bool XTransaction::runAfter(XTransaction *transaction)
 {
     if (!transaction) {
