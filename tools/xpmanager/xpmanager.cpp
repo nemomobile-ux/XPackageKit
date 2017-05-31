@@ -11,6 +11,7 @@
 
 enum class Command {
     InstallPackage,
+    RemovePackage,
     AddRepo,
     EnableRepo,
     DisableRepo,
@@ -20,6 +21,7 @@ enum class Command {
 
 QMap<Command,QString> s_descriptionMap = {
     { Command::InstallPackage, "Install package" },
+    { Command::RemovePackage, "Remove package" },
     { Command::AddRepo, "Add repo"},
     { Command::EnableRepo, "Enable repo" },
     { Command::DisableRepo, "Disable repo" },
@@ -29,6 +31,7 @@ QMap<Command,QString> s_descriptionMap = {
 
 QMap<QString,Command> s_commandMap = {
     { "in", Command::InstallPackage },
+    { "rm", Command::RemovePackage },
     { "ar", Command::AddRepo },
     { "er", Command::EnableRepo },
     { "dr", Command::DisableRepo },
@@ -66,9 +69,20 @@ int main(int argc, char *argv[])
 
     parser.clearPositionalArguments();
 
+    QCommandLineOption allowDepsOption({ QStringLiteral("d"), QStringLiteral("allow-deps") },
+                                 QStringLiteral("allow the package manager to remove other packages which depend on the packages to be removed"));
+
+    QCommandLineOption autoRemoveOption({ QStringLiteral("a"), QStringLiteral("auto-remove") },
+                                 QStringLiteral("tells the package manager to remove all the package which won't be needed anymore after the packages are uninstalled"));
+
     switch (c) {
     case Command::InstallPackage:
         parser.addPositionalArgument("package", "Package name");
+        break;
+    case Command::RemovePackage:
+        parser.addPositionalArgument("package", "Package name");
+        parser.addOption(allowDepsOption);
+        parser.addOption(autoRemoveOption);
         break;
     case Command::AddRepo:
     case Command::EnableRepo:
@@ -96,6 +110,18 @@ int main(int argc, char *argv[])
             parser.showHelp(2);
         }
         tx = manager.installPackage(names.first());
+        break;
+    case Command::RemovePackage:
+        if (names.count() < 1) {
+            parser.showHelp(2);
+        }
+        tx = manager.removePackage(names.first());
+        if (parser.isSet(allowDepsOption)) {
+            tx->setRequestDetail("allowDeps", true);
+        }
+        if (parser.isSet(autoRemoveOption)) {
+            tx->setRequestDetail("autoRemove", true);
+        }
         break;
     case Command::AddRepo:
     {
