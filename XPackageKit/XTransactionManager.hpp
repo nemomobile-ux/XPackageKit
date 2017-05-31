@@ -20,6 +20,7 @@ public:
     XTransaction *setRepositoryEnabled(const QString &repoName, bool enable = true, QObject *parent = nullptr);
     XTransaction *refreshRepository(const QString &repoName, QObject *parent = nullptr);
     XTransaction *installPackage(const QString &packageName, QObject *parent = nullptr);
+    XTransaction *removePackage(const QString &packageName, QObject *parent = nullptr);
 
 signals:
     void started(XTransaction *transaction);

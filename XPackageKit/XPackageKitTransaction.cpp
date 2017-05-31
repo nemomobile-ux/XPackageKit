@@ -205,7 +205,9 @@ void XPackageKitTransaction::doInstall(const QString &packageId)
 
 void XPackageKitTransaction::doRemove(const QString &packageId)
 {
-    PackageKit::Transaction *rpc = PackageKitBackend::mkRemovePackageTransaction(packageId);
+    const bool allowDeps = m_requestDetails.value(QStringLiteral("allowDeps"), false).toBool();
+    const bool autoRemove = m_requestDetails.value(QStringLiteral("autoRemove"), false).toBool();
+    PackageKit::Transaction *rpc = PackageKitBackend::mkRemovePackageTransaction(packageId, allowDeps, autoRemove);
     QObject::connect(rpc, &PackageKit::Transaction::errorCode, [this](PackageKit::Transaction::Error error, const QString &details) {
         setFinishedWithError({{"backend_error", error}, {"backend_details", details}});
         qDebug() << error << details;

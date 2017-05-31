@@ -82,3 +82,16 @@ XTransaction *XTransactionManager::installPackage(const QString &packageName, QO
     t->setRequestDetails({{"packageName", packageName }});
     return t;
 }
+
+/**
+ * Create a transaction to remove a package \a packageName.
+ * Well-known extra request details are booleans allowDeps and autoRemove.
+ *
+ * \return The transaction for given action and parameters.
+ */
+XTransaction *XTransactionManager::removePackage(const QString &packageName, QObject *parent)
+{
+    XTransaction *t = d->createTransaction<XPackageKitTransaction>(XTransaction::RemoveRequest, parent);
+    t->setRequestDetails({{"packageName", packageName }});
+    return t;
+}
