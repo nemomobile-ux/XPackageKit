@@ -59,9 +59,18 @@ void XChainTransaction::onTransactionFinished(XTransaction *transaction)
 
     emit transactionFinished(transaction);
 
+    if (!transaction->isSucceeded()) {
+        QVariantMap errorDetails = transaction->errorDetails();
+        errorDetails[QStringLiteral("chain-error")] = QStringLiteral("Inner transaction failed");
+        setFinishedWithError(errorDetails);
+        return;
+    }
+
     const int nextTransactionIndex = d->currentTransactionIndex + 1;
     if (d->transactions.count() > nextTransactionIndex) {
         runTransactionAtIndex(nextTransactionIndex);
+    } else {
+        setFinished();
     }
 }
 
