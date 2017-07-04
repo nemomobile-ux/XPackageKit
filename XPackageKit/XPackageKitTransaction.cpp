@@ -153,6 +153,7 @@ void XPackageKitTransaction::onSearchTransactionFinished(PackageKit::Transaction
 
 void XPackageKitTransaction::onTransactionErrorCode(PackageKit::Transaction::Error error, const QString &details)
 {
+    qDebug() << "XPackageKitTransaction::onTransactionErrorCode:" << error << details;
     m_errors.append({ error, details });
 }
 
