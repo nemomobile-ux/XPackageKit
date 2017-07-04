@@ -19,6 +19,9 @@ public:
 
     XTransaction *currentTransaction() const;
 
+    XTransaction *first() const;
+    XTransaction *last() const;
+
 signals:
     void transactionStarted(XTransaction *transaction);
     void transactionFinished(XTransaction *transaction);

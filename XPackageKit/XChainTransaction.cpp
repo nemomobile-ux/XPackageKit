@@ -41,6 +41,22 @@ XTransaction *XChainTransaction::currentTransaction() const
     return d->currentTransaction;
 }
 
+XTransaction *XChainTransaction::first() const
+{
+    if (d->transactions.isEmpty()) {
+        return nullptr;
+    }
+    return d->transactions.first();
+}
+
+XTransaction *XChainTransaction::last() const
+{
+    if (d->transactions.isEmpty()) {
+        return nullptr;
+    }
+    return d->transactions.last();
+}
+
 void XChainTransaction::startEvent()
 {
     if (d->transactions.isEmpty()) {
