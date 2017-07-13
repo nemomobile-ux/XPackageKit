@@ -91,5 +91,5 @@ void XTransaction::setDelayedFinishedWithError(const QVariantMap &details)
 
 void XTransaction::onPreviousTransactionFailed(XTransaction *transaction, const QVariantMap &details)
 {
-    setFinishedWithError({{"text", tr("Previous transaction failed")}});
+    setFinishedWithError({{QStringLiteral("text"), tr("Previous transaction failed")}});
 }

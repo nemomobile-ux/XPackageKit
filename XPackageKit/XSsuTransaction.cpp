@@ -15,7 +15,7 @@ XSsuTransaction::XSsuTransaction(XTransaction::RequestType type, QObject *parent
 
 QString XSsuTransaction::repoName() const
 {
-    return requestDetails().value("repoName").toString();
+    return requestDetails().value(QStringLiteral("repoName")).toString();
 }
 
 void XSsuTransaction::startEvent()
@@ -41,7 +41,7 @@ void XSsuTransaction::addRepo()
 {
     const QString url = m_requestDetails.value(QStringLiteral("url")).toString();
     if (repoName().isEmpty() || url.isEmpty()) {
-        setDelayedFinishedWithError(QVariantMap({{"text", "Invalid arguments (we need repo name and repo url)"}}));
+        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Invalid arguments (we need repo name and repo url)")}}));
         return;
     }
 
@@ -51,7 +51,7 @@ void XSsuTransaction::addRepo()
 void XSsuTransaction::removeRepo()
 {
     if (repoName().isEmpty()) {
-        setDelayedFinishedWithError(QVariantMap({{"text", "Repo name is not set"}}));
+        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Repo name is not set")}}));
         return;
     }
     modifyRepo(SsuRepoAction::Remove);
@@ -61,7 +61,7 @@ void XSsuTransaction::setRepoEnabled()
 {
     const QVariant enVariant = m_requestDetails.value(QStringLiteral("enable"));
     if (!enVariant.canConvert<bool>()) {
-        setDelayedFinishedWithError(QVariantMap({{"text", "Repo 'enable' bool argument is not set"}}));
+        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Repo 'enable' bool argument is not set")}}));
         return;
     }
     const bool enable = enVariant.toBool();
@@ -81,9 +81,9 @@ void XSsuTransaction::modifyRepo(XSsuTransaction::SsuRepoAction action)
 void XSsuTransaction::callSsuMethod(const QString &method, const QVariantList &arguments)
 {
     QDBusMessage ssuAddRepoCall = QDBusMessage::createMethodCall(
-                "org.nemo.ssu",
-                "/org/nemo/ssu",
-                "org.nemo.ssu",
+                QStringLiteral("org.nemo.ssu"),
+                QStringLiteral("/org/nemo/ssu"),
+                QStringLiteral("org.nemo.ssu"),
                 method);
     ssuAddRepoCall.setArguments(arguments);
     QDBusPendingCall reply = QDBusConnection::systemBus().asyncCall(ssuAddRepoCall);
@@ -96,9 +96,9 @@ void XSsuTransaction::onSsuCallReply(QDBusPendingCallWatcher *watcher)
     watcher->deleteLater();
     if (watcher->isError()) {
         setFinishedWithError({
-                                 {"dbusErrorName", watcher->error().name() },
-                                 {"dbusErrorMessage", watcher->error().message() },
-                                 {"backend_details", tr("SSU call failed")}
+                                 {QStringLiteral("dbusErrorName"), watcher->error().name() },
+                                 {QStringLiteral("dbusErrorMessage"), watcher->error().message() },
+                                 {QStringLiteral("backend_details"), tr("SSU call failed")}
                              });
         return;
     }
