@@ -50,7 +50,7 @@ XTransaction *XTransactionManager::addRepository(const QString &repoName, const 
 {
     XTransaction *t = d->createTransaction<XSsuTransaction>(XTransaction::AddRepoRequest, parent);
     QVariantMap detailsEx = details;
-    detailsEx.insert("repoName", repoName);
+    detailsEx.insert(QStringLiteral("repoName"), repoName);
     t->setRequestDetails(detailsEx);
     return t;
 }
@@ -58,28 +58,28 @@ XTransaction *XTransactionManager::addRepository(const QString &repoName, const 
 XTransaction *XTransactionManager::removeRepository(const QString &repoName, QObject *parent)
 {
     XTransaction *t = d->createTransaction<XSsuTransaction>(XTransaction::RemoveRepoRequest, parent);
-    t->setRequestDetails({{"repoName", repoName }});
+    t->setRequestDetails({{QStringLiteral("repoName"), repoName }});
     return t;
 }
 
 XTransaction *XTransactionManager::setRepositoryEnabled(const QString &repoName, bool enable, QObject *parent)
 {
     XTransaction *t = d->createTransaction<XSsuTransaction>(XTransaction::SetRepoEnabledRequest, parent);
-    t->setRequestDetails({{"repoName", repoName }, {"enable", enable}});
+    t->setRequestDetails({{QStringLiteral("repoName"), repoName }, {QStringLiteral("enable"), enable}});
     return t;
 }
 
 XTransaction *XTransactionManager::refreshRepository(const QString &repoName, QObject *parent)
 {
     XTransaction *t = d->createTransaction<XPackageKitTransaction>(XTransaction::RefreshRepoRequest, parent);
-    t->setRequestDetails({{"repoName", repoName }});
+    t->setRequestDetails({{QStringLiteral("repoName"), repoName }});
     return t;
 }
 
 XTransaction *XTransactionManager::installPackage(const QString &packageName, QObject *parent)
 {
     XTransaction *t = d->createTransaction<XPackageKitTransaction>(XTransaction::InstallRequest, parent);
-    t->setRequestDetails({{"packageName", packageName }});
+    t->setRequestDetails({{QStringLiteral("packageName"), packageName }});
     return t;
 }
 
@@ -92,6 +92,6 @@ XTransaction *XTransactionManager::installPackage(const QString &packageName, QO
 XTransaction *XTransactionManager::removePackage(const QString &packageName, QObject *parent)
 {
     XTransaction *t = d->createTransaction<XPackageKitTransaction>(XTransaction::RemoveRequest, parent);
-    t->setRequestDetails({{"packageName", packageName }});
+    t->setRequestDetails({{QStringLiteral("packageName"), packageName }});
     return t;
 }

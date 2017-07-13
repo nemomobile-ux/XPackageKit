@@ -10,12 +10,12 @@ XPackageKitTransaction::XPackageKitTransaction(RequestType type, QObject *parent
 
 QString XPackageKitTransaction::packageName() const
 {
-    return requestDetails().value("packageName").toString();
+    return requestDetails().value(QStringLiteral("packageName")).toString();
 }
 
 QString XPackageKitTransaction::repoName() const
 {
-    return requestDetails().value("repoName").toString();
+    return requestDetails().value(QStringLiteral("repoName")).toString();
 }
 
 void XPackageKitTransaction::search()
@@ -90,7 +90,7 @@ void XPackageKitTransaction::startEvent()
         break;
     default:
         qWarning() << "Invalid transaction";
-        setDelayedFinishedWithError(QVariantMap({{"text", "Invalid transaction type"}}));
+        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Invalid transaction type")}}));
         break;
     }
 }
@@ -109,8 +109,8 @@ void XPackageKitTransaction::onSearchTransactionFinished(PackageKit::Transaction
 
     if (result.packageID.isEmpty()) {
         setFinishedWithError({
-                                 {"backend_error", PackageKit::Transaction::ErrorPackageNotFound},
-                                 {"backend_details", tr("Package not found")}
+                                 {QStringLiteral("backend_error"), PackageKit::Transaction::ErrorPackageNotFound},
+                                 {QStringLiteral("backend_details"), tr("Package not found")}
                              });
         return;
     }
@@ -163,13 +163,13 @@ void XPackageKitTransaction::onGenericTransactionFinished(PackageKit::Transactio
     qDebug() << Q_FUNC_INFO << "result:" << exitStatus << "runtime:" << runtime << "status" << t->status();
 
     QVariantMap details = {
-        {"backend_exitCode", exitStatus},
-        {"backend_runTime", runtime}
+        {QStringLiteral("backend_exitCode"), exitStatus},
+        {QStringLiteral("backend_runTime"), runtime}
     };
 
     if (!m_errors.isEmpty()) {
-        details["backend_errorCode"] = static_cast<int>(m_errors.last().error);
-        details["backend_errorDetails"] = m_errors.last().details;
+        details[QStringLiteral("backend_errorCode")] = static_cast<int>(m_errors.last().error);
+        details[QStringLiteral("backend_errorDetails")] = m_errors.last().details;
     }
 
     switch (exitStatus) {
@@ -192,7 +192,7 @@ void XPackageKitTransaction::doInstall(const QString &packageId)
 {
     PackageKit::Transaction *rpc = PackageKitBackend::mkInstallPackageTransaction(packageId, PackageKit::Transaction::TransactionFlagNone);
     QObject::connect(rpc, &PackageKit::Transaction::errorCode, [this](PackageKit::Transaction::Error error, const QString &details) {
-        setFinishedWithError({{"backend_error", error}, {"backend_details", details}});
+        setFinishedWithError({{QStringLiteral("backend_error"), error}, {QStringLiteral("backend_details"), details}});
         qDebug() << error << details;
     });
     connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
@@ -210,7 +210,7 @@ void XPackageKitTransaction::doRemove(const QString &packageId)
     const bool autoRemove = m_requestDetails.value(QStringLiteral("autoRemove"), false).toBool();
     PackageKit::Transaction *rpc = PackageKitBackend::mkRemovePackageTransaction(packageId, allowDeps, autoRemove);
     QObject::connect(rpc, &PackageKit::Transaction::errorCode, [this](PackageKit::Transaction::Error error, const QString &details) {
-        setFinishedWithError({{"backend_error", error}, {"backend_details", details}});
+        setFinishedWithError({{QStringLiteral("backend_error"), error}, {QStringLiteral("backend_details"), details}});
         qDebug() << error << details;
     });
     connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
