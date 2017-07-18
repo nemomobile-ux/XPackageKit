@@ -6,8 +6,16 @@ TARGET = XPackageKit
 VERSION = 0.1.0
 
 CONFIG += link_pkgconfig
-SOURCES += XTransaction.cpp XSsuTransaction.cpp XPackageKitTransaction.cpp XChainTransaction.cpp
-HEADERS += XTransaction.hpp XSsuTransaction.hpp XPackageKitTransaction.hpp XChainTransaction.hpp
+SOURCES += \
+    XSsuTransaction.cpp \
+    XPackageKitTransaction.cpp \
+    XChainTransaction.cpp \
+    XTransaction.cpp
+HEADERS += \
+    XTransaction.hpp \
+    XSsuTransaction.hpp \
+    XPackageKitTransaction.hpp \
+    XChainTransaction.hpp
 
 SOURCES += XTransactionManager.cpp PackageKitBackend.cpp
 HEADERS += XTransactionManager.hpp PackageKitBackend.hpp
