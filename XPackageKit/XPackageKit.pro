@@ -12,6 +12,12 @@ HEADERS += XTransaction.hpp XSsuTransaction.hpp XPackageKitTransaction.hpp XChai
 SOURCES += XTransactionManager.cpp PackageKitBackend.cpp
 HEADERS += XTransactionManager.hpp PackageKitBackend.hpp
 
+DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
+
+QMAKE_CXXFLAGS += -Wall
+QMAKE_CXXFLAGS += -Werror=return-type
+
 linux-g++ { # mer
     PKGCONFIG += packagekit-qt5
     DEFINES += NEMO_PACKAGE_KIT
