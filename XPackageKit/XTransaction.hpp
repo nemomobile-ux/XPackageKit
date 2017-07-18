@@ -42,6 +42,7 @@ public:
 
     QVariantHash errorDetails() const { return m_errorDetails; }
 
+    QVector<QVariantHash> results() const { return m_results; }
     QVariantHash requestDetails() const { return m_requestDetails; }
     void setRequestDetails(const QVariantHash &details);
     void setRequestDetail(const QString &key, const QVariant &value);
@@ -65,6 +66,7 @@ protected slots:
     void setFinishedWithError(const QVariantHash &details);
     void setDelayedFinishedWithError(const QVariantHash &details);
     void onPreviousTransactionFailed(XTransaction *transaction, const QVariantHash &details);
+    void addResult(const QVariantHash &result);
 
 protected:
     virtual void startEvent() = 0;
@@ -74,6 +76,7 @@ protected:
     bool m_succeeded;
 
     RequestType m_type;
+    QVector<QVariantHash> m_results;
     QVariantHash m_requestDetails;
     QVariantHash m_errorDetails;
 

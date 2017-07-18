@@ -93,3 +93,8 @@ void XTransaction::onPreviousTransactionFailed(XTransaction *transaction, const 
 {
     setFinishedWithError({{QStringLiteral("text"), tr("Previous transaction failed")}});
 }
+
+void XTransaction::addResult(const QVariantHash &result)
+{
+    m_results.append(result);
+}
