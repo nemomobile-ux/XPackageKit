@@ -1,9 +1,6 @@
 #ifndef XChainTransaction_hpp
 #define XChainTransaction_hpp
 
-#include <QObject>
-#include <QVector>
-
 #include "XTransaction.hpp"
 
 class XChainTransaction : public XTransaction
