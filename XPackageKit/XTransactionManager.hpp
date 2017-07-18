@@ -15,7 +15,7 @@ public:
 
     void setAutodeleteEnabled(bool enable);
 
-    XTransaction *addRepository(const QString &repoName, const QVariantMap &details, QObject *parent = nullptr);
+    XTransaction *addRepository(const QString &repoName, const QVariantHash &details, QObject *parent = nullptr);
     XTransaction *removeRepository(const QString &repoName, QObject *parent = nullptr);
     XTransaction *setRepositoryEnabled(const QString &repoName, bool enable = true, QObject *parent = nullptr);
     XTransaction *refreshRepository(const QString &repoName, QObject *parent = nullptr);

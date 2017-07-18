@@ -25,7 +25,7 @@ public:
 signals:
     void transactionStarted(XTransaction *transaction);
     void transactionFinished(XTransaction *transaction);
-    void transactionFailed(XTransaction *transaction, const QVariantMap &details);
+    void transactionFailed(XTransaction *transaction, const QVariantHash &details);
 
 protected:
     void startEvent() override;

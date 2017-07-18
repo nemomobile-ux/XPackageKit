@@ -11,7 +11,7 @@ XTransaction::XTransaction(RequestType type, QObject *parent) :
 {
 }
 
-void XTransaction::setRequestDetails(const QVariantMap &details)
+void XTransaction::setRequestDetails(const QVariantHash &details)
 {
     m_requestDetails = details;
 }
@@ -75,7 +75,7 @@ void XTransaction::setFinished()
     emit finished(this);
 }
 
-void XTransaction::setFinishedWithError(const QVariantMap &details)
+void XTransaction::setFinishedWithError(const QVariantHash &details)
 {
     qDebug() << Q_FUNC_INFO << details;
     m_succeeded = false;
@@ -83,13 +83,13 @@ void XTransaction::setFinishedWithError(const QVariantMap &details)
     setFinished();
 }
 
-void XTransaction::setDelayedFinishedWithError(const QVariantMap &details)
+void XTransaction::setDelayedFinishedWithError(const QVariantHash &details)
 {
     qDebug() << Q_FUNC_INFO << details;
-    QMetaObject::invokeMethod(this, "setFinishedWithError", Qt::QueuedConnection, Q_ARG(QVariantMap, details)); // Invoke after return
+    QMetaObject::invokeMethod(this, "setFinishedWithError", Qt::QueuedConnection, Q_ARG(QVariantHash, details)); // Invoke after return
 }
 
-void XTransaction::onPreviousTransactionFailed(XTransaction *transaction, const QVariantMap &details)
+void XTransaction::onPreviousTransactionFailed(XTransaction *transaction, const QVariantHash &details)
 {
     setFinishedWithError({{QStringLiteral("text"), tr("Previous transaction failed")}});
 }

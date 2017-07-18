@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(5);
         }
     });
-    QObject::connect(tx, &XTransaction::failed, [](XTransaction *transaction, const QVariantMap &details) {
+    QObject::connect(tx, &XTransaction::failed, [](XTransaction *transaction, const QVariantHash &details) {
         qWarning() << "Transaction failed:" << transaction << details;
     });
 

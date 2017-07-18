@@ -46,10 +46,10 @@ void XTransactionManager::setAutodeleteEnabled(bool enable)
     d->m_autodelete = enable;
 }
 
-XTransaction *XTransactionManager::addRepository(const QString &repoName, const QVariantMap &details, QObject *parent)
+XTransaction *XTransactionManager::addRepository(const QString &repoName, const QVariantHash &details, QObject *parent)
 {
     XTransaction *t = d->createTransaction<XSsuTransaction>(XTransaction::AddRepoRequest, parent);
-    QVariantMap detailsEx = details;
+    QVariantHash detailsEx = details;
     detailsEx.insert(QStringLiteral("repoName"), repoName);
     t->setRequestDetails(detailsEx);
     return t;

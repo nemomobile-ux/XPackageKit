@@ -90,7 +90,7 @@ void XPackageKitTransaction::startEvent()
         break;
     default:
         qWarning() << "Invalid transaction";
-        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Invalid transaction type")}}));
+        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Invalid transaction type")}}));
         break;
     }
 }
@@ -162,7 +162,7 @@ void XPackageKitTransaction::onGenericTransactionFinished(PackageKit::Transactio
     PackageKit::Transaction *t = qobject_cast<PackageKit::Transaction*>(sender());
     qDebug() << Q_FUNC_INFO << "result:" << exitStatus << "runtime:" << runtime << "status" << t->status();
 
-    QVariantMap details = {
+    QVariantHash details = {
         {QStringLiteral("backend_exitCode"), exitStatus},
         {QStringLiteral("backend_runTime"), runtime}
     };

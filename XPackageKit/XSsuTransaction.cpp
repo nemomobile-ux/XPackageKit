@@ -41,7 +41,7 @@ void XSsuTransaction::addRepo()
 {
     const QString url = m_requestDetails.value(QStringLiteral("url")).toString();
     if (repoName().isEmpty() || url.isEmpty()) {
-        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Invalid arguments (we need repo name and repo url)")}}));
+        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Invalid arguments (we need repo name and repo url)")}}));
         return;
     }
 
@@ -51,7 +51,7 @@ void XSsuTransaction::addRepo()
 void XSsuTransaction::removeRepo()
 {
     if (repoName().isEmpty()) {
-        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Repo name is not set")}}));
+        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Repo name is not set")}}));
         return;
     }
     modifyRepo(SsuRepoAction::Remove);
@@ -61,7 +61,7 @@ void XSsuTransaction::setRepoEnabled()
 {
     const QVariant enVariant = m_requestDetails.value(QStringLiteral("enable"));
     if (!enVariant.canConvert<bool>()) {
-        setDelayedFinishedWithError(QVariantMap({{QStringLiteral("text"), tr("Repo 'enable' bool argument is not set")}}));
+        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Repo 'enable' bool argument is not set")}}));
         return;
     }
     const bool enable = enVariant.toBool();

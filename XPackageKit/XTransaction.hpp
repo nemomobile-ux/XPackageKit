@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QVector>
-#include <QVariantMap>
+#include <QVariantHash>
 
 enum PackageStatus {
     PackageInstalled,
@@ -40,10 +40,10 @@ public:
     bool isFinished() { return m_finished; }
     bool isSucceeded() { return m_succeeded; }
 
-    QVariantMap errorDetails() const { return m_errorDetails; }
+    QVariantHash errorDetails() const { return m_errorDetails; }
 
-    QVariantMap requestDetails() const { return m_requestDetails; }
-    void setRequestDetails(const QVariantMap &details);
+    QVariantHash requestDetails() const { return m_requestDetails; }
+    void setRequestDetails(const QVariantHash &details);
     void setRequestDetail(const QString &key, const QVariant &value);
 
     RequestType type() const { return m_type; }
@@ -53,7 +53,7 @@ public:
 signals:
     void started(XTransaction *transaction);
     void finished(XTransaction *transaction);
-    void failed(XTransaction *transaction, const QVariantMap &details);
+    void failed(XTransaction *transaction, const QVariantHash &details);
     void succeeded(XTransaction *transaction);
 
 public slots:
@@ -62,9 +62,9 @@ public slots:
 
 protected slots:
     void setFinished();
-    void setFinishedWithError(const QVariantMap &details);
-    void setDelayedFinishedWithError(const QVariantMap &details);
-    void onPreviousTransactionFailed(XTransaction *transaction, const QVariantMap &details);
+    void setFinishedWithError(const QVariantHash &details);
+    void setDelayedFinishedWithError(const QVariantHash &details);
+    void onPreviousTransactionFailed(XTransaction *transaction, const QVariantHash &details);
 
 protected:
     virtual void startEvent() = 0;
@@ -74,8 +74,8 @@ protected:
     bool m_succeeded;
 
     RequestType m_type;
-    QVariantMap m_requestDetails;
-    QVariantMap m_errorDetails;
+    QVariantHash m_requestDetails;
+    QVariantHash m_errorDetails;
 
 };
 
