@@ -79,6 +79,7 @@ void XTransaction::setFinishedWithError(const QVariantHash &details)
 {
     qDebug() << Q_FUNC_INFO << details;
     m_succeeded = false;
+    m_errorDetails = details;
     emit failed(this, details);
     setFinished();
 }
