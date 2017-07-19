@@ -69,8 +69,6 @@ void XChainTransaction::startEvent()
 
 void XChainTransaction::onTransactionFinished(XTransaction *transaction)
 {
-    disconnect(d->currentTransaction, &XTransaction::started, this, &XChainTransaction::transactionStarted);
-    disconnect(d->currentTransaction, &XTransaction::failed, this, &XChainTransaction::transactionFailed);
     disconnect(d->currentTransaction, &XTransaction::finished, this, &XChainTransaction::onTransactionFinished);
 
     emit transactionFinished(transaction);
@@ -94,8 +92,7 @@ void XChainTransaction::runTransactionAtIndex(int index)
 {
     d->currentTransactionIndex = index;
     d->currentTransaction = d->transactions.at(index);
-    connect(d->currentTransaction, &XTransaction::started, this, &XChainTransaction::transactionStarted);
-    connect(d->currentTransaction, &XTransaction::failed, this, &XChainTransaction::transactionFailed);
     connect(d->currentTransaction, &XTransaction::finished, this, &XChainTransaction::onTransactionFinished);
     d->currentTransaction->start();
+    emit transactionStarted(d->currentTransaction);
 }
