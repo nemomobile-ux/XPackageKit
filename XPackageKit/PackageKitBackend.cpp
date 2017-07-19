@@ -6,7 +6,7 @@ PackageKit::Transaction *PackageKitBackend::mkResolveTransaction(const QString &
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->resolve(resolveTerm, filters);
 #else
     rpc = PackageKit::Daemon::resolve(resolveTerm, filters);
@@ -18,7 +18,7 @@ PackageKit::Transaction *PackageKitBackend::mkSearchNameTransaction(const QStrin
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->searchNames(searchTerm, filters);
 #else
     rpc = PackageKit::Daemon::searchNames(searchTerm, filters);
@@ -30,7 +30,7 @@ PackageKit::Transaction *PackageKitBackend::mkInstallPackageTransaction(const QS
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->installPackage(packageID, flags);
 #else
     rpc = PackageKit::Daemon::installPackage(packageID, flags);
@@ -42,7 +42,7 @@ PackageKit::Transaction *PackageKitBackend::mkRemovePackageTransaction(const QSt
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->removePackage(packageID, allowDeps, autoRemove, flags);
 #else
     rpc = PackageKit::Daemon::removePackage(packageID, allowDeps, autoRemove, flags);
@@ -54,7 +54,7 @@ PackageKit::Transaction *PackageKitBackend::mkGetFilesTransaction(const QString 
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->getFiles(packageIDs);
 #else
     rpc = PackageKit::Daemon::getFiles(packageIDs);
@@ -67,7 +67,7 @@ PackageKit::Transaction *PackageKitBackend::mkSetRepoEnabledTransaction(const QS
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->repoEnable(repoName, enabled);
 #else
     rpc = PackageKit::Daemon::repoEnable(repoName, enabled);
@@ -80,7 +80,7 @@ PackageKit::Transaction *PackageKitBackend::mkRefreshRepoTransaction(const QStri
 {
     PackageKit::Transaction *rpc = nullptr;
 #ifdef NEMO_PACKAGE_KIT
-    rpc = new PackageKit::Transaction(QDBusObjectPath());
+    rpc = new PackageKit::Transaction();
     rpc->repoSetData(repoName, QStringLiteral("refresh-now"), QStringLiteral("true"));
 #else
     rpc = PackageKit::Daemon::repoSetData(repoName, QStringLiteral("refresh-now"), QStringLiteral("true"));
