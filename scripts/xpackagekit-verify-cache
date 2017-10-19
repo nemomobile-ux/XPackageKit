@@ -1,0 +1,41 @@
+#!/bin/bash
+
+BASENAME=$(basename $0)
+CACHEDIR=$1
+
+EXTERNAL_LOGGER="/usr/bin/logger"
+EXTERNAL_VERIFIER="/usr/sbin/rpm-sig-check"
+
+LOG_LINE="$BASENAME: [$CACHEDIR] "
+
+log_stderr()
+{
+    echo "$LOG_LINE" $@ 1>&2
+}
+
+log_externally()
+{
+    $EXTERNAL_LOGGER "$LOG_LINE" $@
+}
+
+logger()
+{
+    unset logger
+    if [ -f $EXTERNAL_LOGGER ]; then
+        echo "logger is now $EXTERNAL_LOGGER"
+        logger=log_externally
+    else
+        echo "logger is now echo"
+        logger=log_stderr
+    fi
+    logger $@
+}
+
+if [ ! -f "$EXTERNAL_VERIFIER" ]
+then
+    logger "verifier does not exists: $EXTERNAL_VERIFIER"
+    exit 0
+fi
+
+logger "starting verifier: $EXTERNAL_VERIFIER"
+find "$CACHEDIR" -name "*.rpm" | xargs $EXTERNAL_VERIFIER
