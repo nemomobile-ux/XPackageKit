@@ -10,6 +10,7 @@ public:
     XChainTransaction(QObject *parent = nullptr);
     ~XChainTransaction();
 
+    bool addTransaction(XTransaction *transaction);
     XChainTransaction &operator<<(XTransaction *transaction);
 
     QVector<XTransaction*> getTransactions() const;
