@@ -1,8 +1,6 @@
 #include "XResolveTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-#include <QDebug>
-
 XResolveTransaction::XResolveTransaction(QObject *parent)
     : XPackageKitTransaction(parent)
 {

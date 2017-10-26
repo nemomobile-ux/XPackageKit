@@ -1,6 +1,7 @@
 #include "XChainTransaction.hpp"
-#include <QDebug>
 #include <QMetaMethod>
+
+#include "Debug.hpp"
 
 class XChainTransaction::Private
 {

@@ -55,6 +55,7 @@ HEADERS += \
     XUpdateTransaction.hpp \
     XDownloadTransaction.hpp \
     XProcessTransaction.hpp \
+    Debug.hpp \
     PackageKitBackend.hpp
 
 DEFINES += QT_DEPRECATED_WARNINGS

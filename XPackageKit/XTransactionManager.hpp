@@ -1,7 +1,6 @@
 #ifndef XTransactionManager_hpp
 #define XTransactionManager_hpp
 
-#include <QDebug>
 #include <QObject>
 #include <QVector>
 
