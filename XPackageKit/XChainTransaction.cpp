@@ -49,6 +49,21 @@ XChainTransaction::~XChainTransaction()
     delete d;
 }
 
+bool XChainTransaction::addTransaction(XTransaction *transaction)
+{
+    if (!transaction) {
+        xCritical() << "Unable to add transaction: transaction is a nullptr";
+        return false;
+    }
+    if (d->transactions.contains(transaction)) {
+        xCritical() << "Unable to add transaction: transaction is already in the list";
+        return false;
+    }
+    xDebug() << "Add transaction" << transaction->objectName() << "to" << objectName();
+    d->transactions.append(transaction);
+    return true;
+}
+
 /*!
     \fn XChainTransaction &XChainTransaction::operator<<(XTransaction *transaction)
 
@@ -59,8 +74,7 @@ XChainTransaction::~XChainTransaction()
 
 XChainTransaction &XChainTransaction::operator<<(XTransaction *transaction)
 {
-    xDebug() << "adding" << transaction->objectName() << "to" << objectName();
-    d->transactions.append(transaction);
+    addTransaction(transaction);
     return *this;
 }
 
