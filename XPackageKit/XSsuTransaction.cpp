@@ -6,7 +6,7 @@
 #include <QDBusPendingReply>
 #include <QDBusMessage>
 
-#include <QDebug>
+#include "Debug.hpp"
 
 XSsuTransaction::XSsuTransaction(QObject *parent)
 : XTransaction(parent)

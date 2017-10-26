@@ -12,6 +12,8 @@
 #include "XDownloadTransaction.hpp"
 #include "XProcessTransaction.hpp"
 
+#include "Debug.hpp"
+
 /*!
     \class XTransactionManager
     \brief Manager for creating transactions
