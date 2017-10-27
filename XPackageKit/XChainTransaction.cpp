@@ -208,6 +208,8 @@ void XChainTransaction::onTransactionFinished(XTransaction *transaction)
 
 void XChainTransaction::onTransactionProgressChanged(XTransaction *transaction, uint percentage)
 {
+    Q_UNUSED(transaction)
+
     if (d->currentTransactionIndex < d->maxTransactionCount) {
         uint progress = 100 / d->maxTransactionCount * d->currentTransactionIndex;
         progress += percentage / d->maxTransactionCount;
