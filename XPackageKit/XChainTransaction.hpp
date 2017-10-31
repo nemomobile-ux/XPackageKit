@@ -10,6 +10,7 @@ public:
     XChainTransaction(QObject *parent = nullptr);
     ~XChainTransaction();
 
+    bool addTransaction(XTransaction *transaction);
     XChainTransaction &operator<<(XTransaction *transaction);
 
     QVector<XTransaction*> getTransactions() const;
@@ -18,6 +19,9 @@ public:
 
     XTransaction *first() const;
     XTransaction *last() const;
+
+    uint transactionsMaxCount() const;
+    void setTransactionsMaxCount(uint count);
 
 signals:
     void transactionStarted(XTransaction *transaction);
@@ -28,7 +32,8 @@ protected:
 
 protected slots:
     void onTransactionFinished(XTransaction *transaction);
-    void runTransactionAtIndex(int index);
+    void onTransactionProgressChanged(XTransaction *transaction, uint percentage);
+    void runTransactionAtIndex(uint index);
 
 private:
     class Private;

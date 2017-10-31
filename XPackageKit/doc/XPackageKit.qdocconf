@@ -1,0 +1,17 @@
+project                 = XPackageKit
+description             = XPackageKit
+url                     = https://merproject.org/
+version                 = 0.2.0
+
+headerdirs  += ../
+sourcedirs  += ../
+sourcedirs  += src
+
+sources.fileextensions += "*.cpp *.qdoc"
+headers.fileextensions += "*.hpp"
+
+qhp.projects                  = XPackageKit
+qhp.XPackageKit.file          = XPackageKit.qhp
+qhp.XPackageKit.indexTitle    = XPackageKit
+qhp.XPackageKit.namespace     = Nemo.XPackageKit
+qhp.XPackageKit.virtualFolder = doc

@@ -1,228 +1,146 @@
 #include "XPackageKitTransaction.hpp"
-#include "PackageKitBackend.hpp"
+#include <map>
 
-#include <QDebug>
+#include "Debug.hpp"
 
-XPackageKitTransaction::XPackageKitTransaction(RequestType type, QObject *parent) :
-    XTransaction(type, parent)
+XPackageKitTransaction::XPackageKitTransaction(QObject *parent)
+    : XTransaction(parent)
 {
+    setStatus(XTransactionNamespace::PackageStatusUnknown);
 }
 
-QString XPackageKitTransaction::packageName() const
+PackageKit::Transaction::Filters XPackageKitTransaction::toPackageFilters(XTransactionNamespace::Filters txFilters)
 {
-    return requestDetails().value(QStringLiteral("packageName")).toString();
-}
+    PackageKit::Transaction::Filters filter;
 
-QString XPackageKitTransaction::repoName() const
-{
-    return requestDetails().value(QStringLiteral("repoName")).toString();
-}
+    std::map<XTransactionNamespace::Filter, PackageKit::Transaction::Filter> f = {
+        { XTransactionNamespace::FilterNone        , PackageKit::Transaction::FilterNone         },
+        { XTransactionNamespace::FilterInstalled   , PackageKit::Transaction::FilterInstalled    },
+        { XTransactionNamespace::FilterNotInstalled, PackageKit::Transaction::FilterNotInstalled },
+        { XTransactionNamespace::FilterBasename    , PackageKit::Transaction::FilterBasename     },
+        { XTransactionNamespace::FilterNotBasename , PackageKit::Transaction::FilterNotBasename  },
+        { XTransactionNamespace::FilterNewest      , PackageKit::Transaction::FilterNewest       },
+        { XTransactionNamespace::FilterNotNewest   , PackageKit::Transaction::FilterNotNewest    },
+    };
 
-void XPackageKitTransaction::search()
-{
-    qDebug() << Q_FUNC_INFO << packageName();
-    PackageKit::Transaction *rpc = PackageKitBackend::mkResolveTransaction(packageName(),
-                                                                           PackageKit::Transaction::FilterBasename
-                                                                           | PackageKit::Transaction::FilterNewest);
-    connect(rpc, &PackageKit::Transaction::package, this, &XPackageKitTransaction::onSearchResult);
-    connect(rpc, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onSearchTransactionFinished);
-    connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
-#ifdef NEMO_PACKAGE_KIT
-    connect(rpc, &PackageKit::Transaction::changed, this, &XPackageKitTransaction::onStatusChanged);
-#else
-    connect(rpc, &PackageKit::Transaction::statusChanged, this, &XPackageKitTransaction::onStatusChanged);
-#endif
-}
-
-void XPackageKitTransaction::refresh(const QString &repoName)
-{
-    qDebug() << Q_FUNC_INFO << repoName;
-    PackageKit::Transaction *rpc = PackageKitBackend::mkRefreshRepoTransaction(repoName);
-    connect(rpc, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onGenericTransactionFinished);
-    connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
-#ifdef NEMO_PACKAGE_KIT
-    connect(rpc, &PackageKit::Transaction::changed, this, &XPackageKitTransaction::onStatusChanged);
-#else
-    connect(rpc, &PackageKit::Transaction::statusChanged, this, &XPackageKitTransaction::onStatusChanged);
-#endif
-}
-
-void XPackageKitTransaction::setRepoEnabled(const QString &repoName, bool enable)
-{
-    qDebug() << Q_FUNC_INFO << repoName << enable;
-    PackageKit::Transaction *rpc = PackageKitBackend::mkSetRepoEnabledTransaction(repoName, enable);
-    connect(rpc, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onGenericTransactionFinished);
-    connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
-#ifdef NEMO_PACKAGE_KIT
-    connect(rpc, &PackageKit::Transaction::changed, this, &XPackageKitTransaction::onStatusChanged);
-#else
-    connect(rpc, &PackageKit::Transaction::statusChanged, this, &XPackageKitTransaction::onStatusChanged);
-#endif
-}
-
-XPackageKitTransaction::PackageArgs XPackageKitTransaction::getExactSearchResult() const
-{
-    for (const PackageArgs args : m_searchResult) {
-        if (PackageKit::Transaction::packageName(args.packageID) == packageName()) {
-            return args;
+    for (auto of : f) {
+        if (txFilters & of.first) {
+            filter |= of.second;
         }
     }
-    return PackageArgs();
+
+    return filter;
 }
 
-void XPackageKitTransaction::startEvent()
+PackageKit::Transaction::TransactionFlags XPackageKitTransaction::toPackageFlags(XTransactionNamespace::TransactionFlags txFlags)
 {
-    switch(type()) {
-    case RefreshRepoRequest:
-        refresh(repoName());
-        break;
-    case SetRepoEnabledRequest:
-    {
-        const bool enable = m_requestDetails.value(QStringLiteral("enable"), true).toBool();
-        setRepoEnabled(repoName(), enable);
+    PackageKit::Transaction::TransactionFlags flag;
+
+    std::map<XTransactionNamespace::TransactionFlag, PackageKit::Transaction::TransactionFlag> f = {
+        { XTransactionNamespace::TransactionFlagNone        , PackageKit::Transaction::TransactionFlagNone          },
+        { XTransactionNamespace::TransactionFlagOnlyTrusted , PackageKit::Transaction::TransactionFlagOnlyTrusted   },
+        { XTransactionNamespace::TransactionFlagSimulate    , PackageKit::Transaction::TransactionFlagSimulate      },
+        { XTransactionNamespace::TransactionFlagOnlyDownload, PackageKit::Transaction::TransactionFlagOnlyDownload  },
+    };
+
+    for (auto of : f) {
+        if (txFlags & of.first) {
+            flag |= of.second;
+        }
     }
-        break;
-    case InstallRequest:
-    case RemoveRequest:
-    case UpdateRequest:
-    case StatusRequest:
-        search(); // For all those requests we need to search the package first
-        break;
-    default:
-        qWarning() << "Invalid transaction";
-        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Invalid transaction type")}}));
-        break;
-    }
+
+    return flag;
 }
 
-void XPackageKitTransaction::onSearchResult(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary)
+PackageKit::Transaction::Status XPackageKitTransaction::packageStatus(XTransactionNamespace::TransactionStatus txStatus)
 {
-    qDebug() << "Search result (one of):" << packageID << info;
-    const PackageArgs args { info, packageID, summary };
-    m_searchResult << args;
+    return static_cast<PackageKit::Transaction::Status>(txStatus);
 }
 
-void XPackageKitTransaction::onSearchTransactionFinished(PackageKit::Transaction::Exit status, uint runtime)
+XTransactionNamespace::TransactionStatus XPackageKitTransaction::transactionStatus(PackageKit::Transaction::Status pkStatus)
 {
-    qDebug() << Q_FUNC_INFO << packageName() << "result:" << status << runtime;
-    PackageArgs result = getExactSearchResult();
+    return static_cast<XTransactionNamespace::TransactionStatus>(pkStatus);
+}
 
-    if (result.packageID.isEmpty()) {
-        setFinishedWithError({
-                                 {QStringLiteral("backend_error"), PackageKit::Transaction::ErrorPackageNotFound},
-                                 {QStringLiteral("backend_details"), tr("Package not found")}
-                             });
-        return;
-    }
+QString XPackageKitTransaction::packageName(const QString &pkgId)
+{
+    return PackageKit::Transaction::packageName(pkgId);
+}
 
-    qDebug() << "Has results {" << result.info << ", " << result.packageID << "); request type: " << m_type;
+QString XPackageKitTransaction::packageVersion(const QString &pkgId)
+{
+    return PackageKit::Transaction::packageVersion(pkgId);
+}
 
-    switch (m_type) {
-    case InstallRequest:
-        if (result.info == PackageKit::Transaction::InfoInstalled) {
-            qDebug() << Q_FUNC_INFO << "NOP";
-            setFinished();
-            // NOP
-        } else {
-            doInstall(result.packageID);
-        }
-        break;
-    case RemoveRequest:
-        if (result.info == PackageKit::Transaction::InfoInstalled) {
-            doRemove(result.packageID);
-        } else {
-            qDebug() << Q_FUNC_INFO << "NOP";
-            setFinished();
-        }
-        break;
-    case UpdateRequest:
-        if (result.info == PackageKit::Transaction::InfoInstalled) {
-            doUpdate(result.packageID);
-        } else {
-            doInstall(result.packageID);
-        }
-        break;
-    case StatusRequest:
-        qDebug() << Q_FUNC_INFO << "NOP";
-        setFinished();
-        break;
-    default:
-        break;
-    }
+QString XPackageKitTransaction::packageArch(const QString &pkgId)
+{
+    return PackageKit::Transaction::packageArch(pkgId);
+}
+
+QString XPackageKitTransaction::packageData(const QString &pkgId)
+{
+    return PackageKit::Transaction::packageData(pkgId);
 }
 
 void XPackageKitTransaction::onTransactionErrorCode(PackageKit::Transaction::Error error, const QString &details)
 {
-    qDebug() << "XPackageKitTransaction::onTransactionErrorCode:" << error << details;
+    xDebug() << error << details;
     m_errors.append({ error, details });
 }
 
-void XPackageKitTransaction::onGenericTransactionFinished(PackageKit::Transaction::Exit exitStatus, uint runtime)
+void XPackageKitTransaction::onTransactionFinished(PackageKit::Transaction::Exit exitStatus, uint runtime)
 {
-    PackageKit::Transaction *t = qobject_cast<PackageKit::Transaction*>(sender());
-    qDebug() << Q_FUNC_INFO << "result:" << exitStatus << "runtime:" << runtime << "status" << t->status();
+    xDebug() << exitStatus << runtime;
+    if (exitStatus == PackageKit::Transaction::ExitSuccess) {
+        setFinished();
+    } else {
+        QVariantHash details = {
+            {QStringLiteral("backend_exitCode"), exitStatus},
+            {QStringLiteral("backend_runTime"), runtime}
+        };
 
-    QVariantHash details = {
-        {QStringLiteral("backend_exitCode"), exitStatus},
-        {QStringLiteral("backend_runTime"), runtime}
-    };
+        if (!m_errors.isEmpty()) {
+            details[QStringLiteral("backend_errorCode")] = static_cast<int>(m_errors.last().error);
+            details[QStringLiteral("backend_errorDetails")] = m_errors.last().details;
+        }
 
-    if (!m_errors.isEmpty()) {
-        details[QStringLiteral("backend_errorCode")] = static_cast<int>(m_errors.last().error);
-        details[QStringLiteral("backend_errorDetails")] = m_errors.last().details;
-    }
 
-    switch (exitStatus) {
-    case PackageKit::Transaction::ExitSuccess:
-        setFinished(); // Installed
-        break;
-    default:
         setFinishedWithError(details);
-        break;
     }
 }
 
-void XPackageKitTransaction::onStatusChanged()
+void XPackageKitTransaction::onTransactionMessage(PackageKit::Transaction::Message type, const QString &message)
 {
-    PackageKit::Transaction *t = qobject_cast<PackageKit::Transaction*>(sender());
-    qDebug() << "Status:" << t->status();
+    xDebug() << type << message;
 }
 
-void XPackageKitTransaction::doInstall(const QString &packageId)
+void XPackageKitTransaction::onTransactionItemProgress(const QString &itemID, PackageKit::Transaction::Status pkStatus, uint percentage)
 {
-    PackageKit::Transaction *rpc = PackageKitBackend::mkInstallPackageTransaction(packageId, PackageKit::Transaction::TransactionFlagNone);
-    QObject::connect(rpc, &PackageKit::Transaction::errorCode, [this](PackageKit::Transaction::Error error, const QString &details) {
-        setFinishedWithError({{QStringLiteral("backend_error"), error}, {QStringLiteral("backend_details"), details}});
-        qDebug() << error << details;
-    });
-    connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
-    connect(rpc, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onGenericTransactionFinished);
+    xDebug() << itemID << pkStatus << percentage;
+    emit progressStatus(this, itemID, XPackageKitTransaction::transactionStatus(pkStatus), percentage);
+}
+
+void XPackageKitTransaction::onTransactionStatusChanged()
+{
+    PackageKit::Transaction *tx = qobject_cast<PackageKit::Transaction*>(sender());
+    if (!tx) {
+        return;
+    }
+    setProgress(tx->percentage());
+    setStatus(static_cast<XTransactionNamespace::TransactionStatus>(tx->status()));
+    xDebug() << "percentage:" << progress() << "status:" << status();
+}
+
+void XPackageKitTransaction::startEvent()
+{
+    PackageKit::Transaction *tx = createTransaction();
+    connect(tx, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onTransactionFinished);
+    connect(tx, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
+    connect(tx, &PackageKit::Transaction::message, this, &XPackageKitTransaction::onTransactionMessage);
+    connect(tx, &PackageKit::Transaction::itemProgress, this, &XPackageKitTransaction::onTransactionItemProgress);
 #ifdef NEMO_PACKAGE_KIT
-    connect(rpc, &PackageKit::Transaction::changed, this, &XPackageKitTransaction::onStatusChanged);
+    connect(tx, &PackageKit::Transaction::changed, this, &XPackageKitTransaction::onTransactionStatusChanged);
 #else
-    connect(rpc, &PackageKit::Transaction::statusChanged, this, &XPackageKitTransaction::onStatusChanged);
+    connect(tx, &PackageKit::Transaction::statusChanged, this, &XPackageKitTransaction::onTransactionStatusChanged);
 #endif
-}
-
-void XPackageKitTransaction::doRemove(const QString &packageId)
-{
-    const bool allowDeps = m_requestDetails.value(QStringLiteral("allowDeps"), false).toBool();
-    const bool autoRemove = m_requestDetails.value(QStringLiteral("autoRemove"), false).toBool();
-    PackageKit::Transaction *rpc = PackageKitBackend::mkRemovePackageTransaction(packageId, allowDeps, autoRemove);
-    QObject::connect(rpc, &PackageKit::Transaction::errorCode, [this](PackageKit::Transaction::Error error, const QString &details) {
-        setFinishedWithError({{QStringLiteral("backend_error"), error}, {QStringLiteral("backend_details"), details}});
-        qDebug() << error << details;
-    });
-    connect(rpc, &PackageKit::Transaction::errorCode, this, &XPackageKitTransaction::onTransactionErrorCode);
-    connect(rpc, &PackageKit::Transaction::finished, this, &XPackageKitTransaction::onGenericTransactionFinished);
-#ifdef NEMO_PACKAGE_KIT
-    connect(rpc, &PackageKit::Transaction::changed, this, &XPackageKitTransaction::onStatusChanged);
-#else
-    connect(rpc, &PackageKit::Transaction::statusChanged, this, &XPackageKitTransaction::onStatusChanged);
-#endif
-}
-
-void XPackageKitTransaction::doUpdate(const QString &packageId)
-{
-    doInstall(packageId);
 }

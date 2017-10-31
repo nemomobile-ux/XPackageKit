@@ -1,0 +1,136 @@
+/*!
+    \class XTransactionNamespace
+    \brief Namespace
+    \inmodule XPackageKit
+*/
+
+/*!
+    \enum XTransactionNamespace::Filter
+
+    This enum type specifies a XTransactionNamespace::Filter
+
+    \value FilterNone
+           dummy
+    \value FilterInstalled
+           dummy
+    \value FilterNotInstalled
+           dummy
+    \value FilterBasename
+           dummy
+    \value FilterNotBasename
+           dummy
+    \value FilterNewest
+           dummy
+    \value FilterNotNewest
+           dummy
+*/
+
+/*!
+    \enum XTransactionNamespace::TransactionFlag
+
+    This enum type specifies a XTransactionNamespace::TransactionFlag
+
+    \value TransactionFlagNone
+           dummy
+    \value TransactionFlagOnlyTrusted
+           dummy
+    \value TransactionFlagSimulate
+           dummy
+    \value TransactionFlagOnlyDownload
+           dummy
+*/
+
+/*!
+    \enum XTransactionNamespace::TransactionStatus
+
+    This enum type specifies a XTransactionNamespace::TransactionStatus
+
+    \value PackageStatusUnknown
+           dummy
+    \value PackageStatusWait
+           dummy
+    \value PackageStatusSetup
+           dummy
+    \value PackageStatusRunning
+           dummy
+    \value PackageStatusQuery
+           dummy
+    \value PackageStatusInfo
+           dummy
+    \value PackageStatusRemove
+           dummy
+    \value PackageStatusRefreshCache
+           dummy
+    \value PackageStatusDownload
+           dummy
+    \value PackageStatusInstall
+           dummy
+    \value PackageStatusUpdate
+           dummy
+    \value PackageStatusCleanup
+           dummy
+    \value PackageStatusObsolete
+           dummy
+    \value PackageStatusDepResolve
+           dummy
+    \value PackageStatusSigCheck
+           dummy
+    \value PackageStatusTestCommit
+           dummy
+    \value PackageStatusCommit
+           dummy
+    \value PackageStatusRequest
+           dummy
+    \value PackageStatusFinished
+           dummy
+    \value PackageStatusCancel
+           dummy
+    \value PackageStatusDownloadRepository
+           dummy
+    \value PackageStatusDownloadPackagelist
+           dummy
+    \value PackageStatusDownloadFilelist
+           dummy
+    \value PackageStatusDownloadChangelog
+           dummy
+    \value PackageStatusDownloadGroup
+           dummy
+    \value PackageStatusDownloadUpdateinfo
+           dummy
+    \value PackageStatusRepackaging
+           dummy
+    \value PackageStatusLoadingCache
+           dummy
+    \value PackageStatusScanApplications
+           dummy
+    \value PackageStatusGeneratePackageList
+           dummy
+    \value PackageStatusWaitingForLock
+           dummy
+    \value PackageStatusWaitingForAuth
+           dummy
+    \value PackageStatusScanProcessList
+           dummy
+    \value PackageStatusCheckExecutableFiles
+           dummy
+    \value PackageStatusCheckLibraries
+           dummy
+    \value PackageStatusCopyFiles
+           dummy
+    \value RepoStatusIdle
+           dummy
+    \value RepoStatusWorking
+           dummy
+    \value RepoStatusCompleted
+           dummy
+    \value ProcessStatusNotRunning
+           dummy
+    \value ProcessStatusStarting
+           dummy
+    \value ProcessStatusRunning
+           dummy
+    \value ProcessStatusFinished
+           dummy
+    \value TransactionStatusUnknown
+           dummy
+*/

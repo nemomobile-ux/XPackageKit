@@ -6,11 +6,12 @@
 #include <QDBusPendingReply>
 #include <QDBusMessage>
 
-#include <QDebug>
+#include "Debug.hpp"
 
-XSsuTransaction::XSsuTransaction(XTransaction::RequestType type, QObject *parent) :
-    XTransaction(type, parent)
+XSsuTransaction::XSsuTransaction(QObject *parent)
+: XTransaction(parent)
 {
+    setStatus(XTransactionNamespace::RepoStatusIdle);
 }
 
 QString XSsuTransaction::repoName() const
@@ -20,17 +21,16 @@ QString XSsuTransaction::repoName() const
 
 void XSsuTransaction::startEvent()
 {
-    qDebug() << Q_FUNC_INFO << m_requestDetails;
+    xDebug() << requestDetails();
 
-    switch (m_type) {
-    case AddRepoRequest:
+    switch (action()) {
+    case SsuRepoAction::Add:
         addRepo();
         break;
-    case RemoveRepoRequest:
-        removeRepo();
-        break;
-    case SetRepoEnabledRequest:
-        setRepoEnabled();
+    case SsuRepoAction::Remove:
+    case SsuRepoAction::Enable:
+    case SsuRepoAction::Disable:
+        modifyRepo(action());
         break;
     default:
         break;
@@ -39,37 +39,13 @@ void XSsuTransaction::startEvent()
 
 void XSsuTransaction::addRepo()
 {
-    const QString url = m_requestDetails.value(QStringLiteral("url")).toString();
+    const QString url = requestDetails().value(QStringLiteral("url")).toString();
     if (repoName().isEmpty() || url.isEmpty()) {
         setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Invalid arguments (we need repo name and repo url)")}}));
         return;
     }
 
     callSsuMethod(QStringLiteral("addRepo"), { repoName(), url });
-}
-
-void XSsuTransaction::removeRepo()
-{
-    if (repoName().isEmpty()) {
-        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Repo name is not set")}}));
-        return;
-    }
-    modifyRepo(SsuRepoAction::Remove);
-}
-
-void XSsuTransaction::setRepoEnabled()
-{
-    const QVariant enVariant = m_requestDetails.value(QStringLiteral("enable"));
-    if (!enVariant.canConvert<bool>()) {
-        setDelayedFinishedWithError(QVariantHash({{QStringLiteral("text"), tr("Repo 'enable' bool argument is not set")}}));
-        return;
-    }
-    const bool enable = enVariant.toBool();
-    if (enable) {
-        modifyRepo(SsuRepoAction::Enable);
-    } else {
-        modifyRepo(SsuRepoAction::Disable);
-    }
 }
 
 void XSsuTransaction::modifyRepo(XSsuTransaction::SsuRepoAction action)
@@ -89,10 +65,21 @@ void XSsuTransaction::callSsuMethod(const QString &method, const QVariantList &a
     QDBusPendingCall reply = QDBusConnection::systemBus().asyncCall(ssuAddRepoCall);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     QObject::connect(watcher, &QDBusPendingCallWatcher::finished, this, &XSsuTransaction::onSsuCallReply);
+
+    setStatus(XTransactionNamespace::RepoStatusWorking);
+    setProgress(50);
+}
+
+XSsuTransaction::SsuRepoAction XSsuTransaction::action()
+{
+    return requestDetails().value(QStringLiteral("action")).value<SsuRepoAction>();
 }
 
 void XSsuTransaction::onSsuCallReply(QDBusPendingCallWatcher *watcher)
 {
+    setProgress(100);
+    setStatus(XTransactionNamespace::RepoStatusCompleted);
+
     watcher->deleteLater();
     if (watcher->isError()) {
         setFinishedWithError({
