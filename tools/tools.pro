@@ -1,2 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = xpmanager
+SUBDIRS = xpmanager \
+    test

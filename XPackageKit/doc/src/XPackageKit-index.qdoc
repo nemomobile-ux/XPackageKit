@@ -1,0 +1,7 @@
+/*!
+    \page XPackageKit-index.html
+    \title XPackageKit
+    \brief Transactions library
+
+    \generatelist{classesbymodule XPackageKit}
+*/

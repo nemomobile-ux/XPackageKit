@@ -4,10 +4,12 @@ Version:    0.1.0
 Release:    1
 Group:      System/Libraries
 License:    Proprietary
-URL:        https://bitbucket.org/jolla/ui-sailfish-components-updater
+URL:        https://git.merproject.org/mer-core/libXPackageKit
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(packagekit-qt5)
+BuildRequires:  qt5-tools
+BuildRequires:  mer-qdoc-template
 
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 
@@ -30,14 +32,30 @@ Requires:   %{name} >= %{version}
 %description tools
 XPackageKit cli tool
 
+%package doc
+Summary:    XPackageKit library documentation
+Group:      System/Libraries
+
+%description doc
+%{summary}.
+
+%package verify
+Summary:    XPackageKit verification scripts
+Group:      System/Libraries
+
+%description verify
+%{summary}.
+
 %prep
 %setup -q -n %{name}-%{version}
 
 %build
+export QT_INSTALL_DOCS=%{_docdir}/qt5
 %qtc_qmake5
-make %{?jobs:-j%jobs}
+make %{?_smp_mflags}
 
 %install
+export QT_INSTALL_DOCS=%{_docdir}/qt5
 rm -rf %{buildroot}
 %qmake5_install
 
@@ -53,6 +71,16 @@ rm -rf %{buildroot}
 %files tools
 %defattr(-,root,root,-)
 %{_bindir}/xpmanager
+%{_bindir}/xptest
+
+%files doc
+%defattr(-,root,root,-)
+%dir %{_datadir}/doc/xpackagekit
+%{_datadir}/doc/xpackagekit/XPackageKit.qch
+
+%files verify
+%defattr(-,root,root,-)
+%{_bindir}/xpackagekit-verify-cache
 
 %post
 /sbin/ldconfig

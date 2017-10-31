@@ -2,11 +2,11 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QDebug>
+#include <QTimer>
 
 #include <QMap>
 
 #include "XPackageKit/XTransaction.hpp"
-#include "XPackageKit/XChainTransaction.hpp"
 #include "XPackageKit/XTransactionManager.hpp"
 
 enum class Command {
@@ -17,6 +17,7 @@ enum class Command {
     DisableRepo,
     RemoveRepo,
     UpdateRepo,
+    UpdatePackage,
 };
 
 QMap<Command,QString> s_descriptionMap = {
@@ -27,6 +28,7 @@ QMap<Command,QString> s_descriptionMap = {
     { Command::DisableRepo, "Disable repo" },
     { Command::RemoveRepo, "Remove repo" },
     { Command::UpdateRepo, "Update repo" },
+    { Command::UpdatePackage, "Update package" },
 };
 
 QMap<QString,Command> s_commandMap = {
@@ -38,6 +40,7 @@ QMap<QString,Command> s_commandMap = {
     { "rr", Command::RemoveRepo },
     { "ur", Command::UpdateRepo },
     { "ref", Command::UpdateRepo },
+    { "up", Command::UpdatePackage },
 };
 
 int main(int argc, char *argv[])
@@ -65,8 +68,6 @@ int main(int argc, char *argv[])
     }
     Command c = s_commandMap.value(commandStr);
 
-    XTransactionManager manager;
-
     parser.clearPositionalArguments();
 
     QCommandLineOption allowDepsOption({ QStringLiteral("d"), QStringLiteral("allow-deps") },
@@ -75,9 +76,13 @@ int main(int argc, char *argv[])
     QCommandLineOption autoRemoveOption({ QStringLiteral("a"), QStringLiteral("auto-remove") },
                                  QStringLiteral("tells the package manager to remove all the package which won't be needed anymore after the packages are uninstalled"));
 
+    QCommandLineOption downloadOnly({ QStringLiteral("s"), QStringLiteral("download-only") },
+                                 QStringLiteral("only download and store rpm packages in cache, do not install"));
+
     switch (c) {
     case Command::InstallPackage:
         parser.addPositionalArgument("package", "Package name");
+        parser.addOption(downloadOnly);
         break;
     case Command::RemovePackage:
         parser.addPositionalArgument("package", "Package name");
@@ -90,6 +95,10 @@ int main(int argc, char *argv[])
     case Command::RemoveRepo:
     case Command::UpdateRepo:
         parser.addPositionalArgument("repo", "Repository name");
+    case Command::UpdatePackage:
+        parser.addPositionalArgument("package", "Package name");
+        parser.addOption(downloadOnly);
+        break;
     default:
         break;
     }
@@ -103,19 +112,22 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    XTransactionManager::setDefaultParent(&app);
+
     XTransaction *tx = nullptr;
     switch (c) {
     case Command::InstallPackage:
         if (names.count() < 1) {
             parser.showHelp(2);
         }
-        tx = manager.installPackage(names.first());
+        tx = XTransactionManager::installPackages(names, parser.isSet(downloadOnly) ? XTransactionNamespace::TransactionFlagOnlyDownload
+                                                                                    : XTransactionNamespace::TransactionFlagNone);
         break;
     case Command::RemovePackage:
         if (names.count() < 1) {
             parser.showHelp(2);
         }
-        tx = manager.removePackage(names.first());
+        tx = XTransactionManager::removePackages({names.first()});
         if (parser.isSet(allowDepsOption)) {
             tx->setRequestDetail("allowDeps", true);
         }
@@ -129,20 +141,27 @@ int main(int argc, char *argv[])
             parser.showHelp(2);
         }
         const QString url = names.at(1);
-        tx = manager.addRepository(names.first(), {{"url", url}});
+        tx = XTransactionManager::addRepository(names.first(), {{"url", url}});
     }
         break;
     case Command::EnableRepo:
-        tx = manager.setRepositoryEnabled(names.first(), true);
+        tx = XTransactionManager::setRepositoryEnabled(names.first(), true);
         break;
     case Command::DisableRepo:
-        tx = manager.setRepositoryEnabled(names.first(), false);
+        tx = XTransactionManager::setRepositoryEnabled(names.first(), false);
         break;
     case Command::RemoveRepo:
-        tx = manager.removeRepository(names.first());
+        tx = XTransactionManager::removeRepository(names.first());
         break;
     case Command::UpdateRepo:
-        tx = manager.refreshRepository(names.first());
+        tx = XTransactionManager::refreshRepository(names.first());
+        break;
+    case Command::UpdatePackage:
+        if (names.count() < 1) {
+            parser.showHelp(2);
+        }
+        tx = XTransactionManager::updatePackages(names, parser.isSet(downloadOnly) ? XTransactionNamespace::TransactionFlagOnlyDownload
+                                                                                   : XTransactionNamespace::TransactionFlagNone);
         break;
     default:
         break;
@@ -163,7 +182,7 @@ int main(int argc, char *argv[])
         qWarning() << "Transaction failed:" << transaction << details;
     });
 
-    tx->start();
+    QTimer::singleShot(0, tx, &XTransaction::start);
 
     return app.exec();
 }
