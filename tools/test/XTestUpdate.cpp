@@ -1,5 +1,6 @@
 #include "XTestUpdate.hpp"
 #include <QDateTime>
+#include <QDebug>
 
 XTestUpdate::XTestUpdate(const QString &packageName, QObject *parent)
    : XChainTransaction(parent)
@@ -37,7 +38,7 @@ void XTestUpdate::checkUpdateInstalledDepends()
 void XTestUpdate::onResolveInstalledFinished(XTransaction *transaction)
 {
     if (transaction->results().isEmpty()) {
-        xDebug() << "### package not installed:" << packageName;
+        qDebug() << "### package not installed:" << packageName;
         return;
     }
 
@@ -64,14 +65,14 @@ void XTestUpdate::onDependsInstalledFinished(XTransaction *transaction)
 void XTestUpdate::onResolveAvailableFinished(XTransaction *transaction)
 {
     if (transaction->results().isEmpty()) {
-        xDebug() << "### no packages resolved for:" << packageName;
+        qDebug() << "### no packages resolved for:" << packageName;
         return;
     }
 
     updatePkgId = transaction->results().first().value(QStringLiteral("packageID")).toString();
 
     if (XTransactionManager::isInstalled(updatePkgId)) {
-        xDebug() << "### no update candidate for:" << packageName;
+        qDebug() << "### no update candidate for:" << packageName;
 
         checkUpdateInstalledDepends();
 
