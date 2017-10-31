@@ -9,13 +9,9 @@ class XSsuTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    explicit XSsuTransaction(RequestType type, QObject *parent = nullptr);
+    explicit XSsuTransaction(QObject *parent = nullptr);
     QString repoName() const;
 
-protected slots:
-    void onSsuCallReply(QDBusPendingCallWatcher *watcher);
-
-protected:
     enum class SsuRepoAction {
         // Keep in sync with Ssud::Actions
         Remove  = 0,
@@ -24,15 +20,22 @@ protected:
         Enable  = 3,
         Invalid
     };
+    Q_ENUM(SsuRepoAction)
+
+protected slots:
+    void onSsuCallReply(QDBusPendingCallWatcher *watcher);
+
+protected:
 
     void startEvent() override;
 
     void addRepo();
-    void removeRepo();
-    void setRepoEnabled();
     void modifyRepo(SsuRepoAction action);
 
     void callSsuMethod(const QString &method, const QVariantList &arguments);
+
+private:
+    SsuRepoAction action();
 
 };
 

@@ -1,59 +1,45 @@
-#ifndef XPackageKitTransaction_hpp
-#define XPackageKitTransaction_hpp
+#ifndef XPACKAGEKITTRANSACTION_HPP
+#define XPACKAGEKITTRANSACTION_HPP
 
-#include "XTransaction.hpp"
-
+#include "XTransactionManager.hpp"
 #include <Transaction>
 
 class XPackageKitTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    explicit XPackageKitTransaction(RequestType type, QObject *parent = nullptr);
-
-    QString packageName() const;
-    QString repoName() const;
-
-    struct PackageArgs {
-        PackageKit::Transaction::Info info;
-        QString packageID;
-        QString summary;
-    };
+    XPackageKitTransaction(QObject *parent = nullptr);
 
     struct ErrorStruct {
         PackageKit::Transaction::Error error;
         QString details;
     };
 
-    PackageArgs getExactSearchResult() const;
+    static PackageKit::Transaction::Filters toPackageFilters(XTransactionNamespace::Filters txFilters);
+    static PackageKit::Transaction::TransactionFlags toPackageFlags(XTransactionNamespace::TransactionFlags txFlags);
 
-signals:
-    void packageStatusChanged(const QString &packageName, PackageStatus);
+    static PackageKit::Transaction::Status packageStatus(XTransactionNamespace::TransactionStatus txStatus);
+    static XTransactionNamespace::TransactionStatus transactionStatus(PackageKit::Transaction::Status pkStatus);
 
-protected slots:
-    void onSearchResult(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);
-    void onSearchTransactionFinished(PackageKit::Transaction::Exit status, uint runtime);
+    static QString packageName(const QString &pkgId);
+    static QString packageVersion(const QString &pkgId);
+    static QString packageArch(const QString &pkgId);
+    static QString packageData(const QString &pkgId);
 
-    void onTransactionErrorCode(PackageKit::Transaction::Error error, const QString &details);
-    void onGenericTransactionFinished(PackageKit::Transaction::Exit status, uint runtime);
+private slots:
+    virtual void onTransactionErrorCode(PackageKit::Transaction::Error error, const QString &details);
+    virtual void onTransactionFinished(PackageKit::Transaction::Exit exitStatus, uint runtime);
+    virtual void onTransactionMessage(PackageKit::Transaction::Message type, const QString &message);
+    virtual void onTransactionItemProgress(const QString &itemID, PackageKit::Transaction::Status pkStatus, uint percentage);
 
-    void onStatusChanged();
-
-    void doInstall(const QString &packageId);
-    void doRemove(const QString &packageId);
-    void doUpdate(const QString &packageId);
-
-protected:
-    void search();
-    void refresh(const QString &repoName);
-    void setRepoEnabled(const QString &repoName, bool enable);
+    virtual void onTransactionStatusChanged();
 
 protected:
     void startEvent() override;
+    virtual PackageKit::Transaction *createTransaction() = 0;
 
-    QVector<PackageArgs> m_searchResult;
+private:
     QVector<ErrorStruct> m_errors;
-
 };
 
-#endif // XPackageKitTransaction_hpp
+#endif // XPACKAGEKITTRANSACTION_HPP
