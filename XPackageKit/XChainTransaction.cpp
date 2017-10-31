@@ -1,6 +1,7 @@
 #include "XChainTransaction.hpp"
-#include <QDebug>
 #include <QMetaMethod>
+
+#include "Debug.hpp"
 
 class XChainTransaction::Private
 {
@@ -49,6 +50,21 @@ XChainTransaction::~XChainTransaction()
     delete d;
 }
 
+bool XChainTransaction::addTransaction(XTransaction *transaction)
+{
+    if (!transaction) {
+        xCritical() << "Unable to add transaction: transaction is a nullptr";
+        return false;
+    }
+    if (d->transactions.contains(transaction)) {
+        xCritical() << "Unable to add transaction: transaction is already in the list";
+        return false;
+    }
+    xDebug() << "Add transaction" << transaction->objectName() << "to" << objectName();
+    d->transactions.append(transaction);
+    return true;
+}
+
 /*!
     \fn XChainTransaction &XChainTransaction::operator<<(XTransaction *transaction)
 
@@ -59,8 +75,7 @@ XChainTransaction::~XChainTransaction()
 
 XChainTransaction &XChainTransaction::operator<<(XTransaction *transaction)
 {
-    xDebug() << "adding" << transaction->objectName() << "to" << objectName();
-    d->transactions.append(transaction);
+    addTransaction(transaction);
     return *this;
 }
 
@@ -193,6 +208,8 @@ void XChainTransaction::onTransactionFinished(XTransaction *transaction)
 
 void XChainTransaction::onTransactionProgressChanged(XTransaction *transaction, uint percentage)
 {
+    Q_UNUSED(transaction)
+
     if (d->currentTransactionIndex < d->maxTransactionCount) {
         uint progress = 100 / d->maxTransactionCount * d->currentTransactionIndex;
         progress += percentage / d->maxTransactionCount;

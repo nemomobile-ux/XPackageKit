@@ -1,7 +1,7 @@
 #include "XTransaction.hpp"
 #include "XTransactionManager.hpp"
 
-#include <QDebug>
+#include "Debug.hpp"
 
 /*!
     \class XTransaction

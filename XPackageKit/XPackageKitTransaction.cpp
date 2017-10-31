@@ -1,7 +1,7 @@
 #include "XPackageKitTransaction.hpp"
 #include <map>
 
-#include <QDebug>
+#include "Debug.hpp"
 
 XPackageKitTransaction::XPackageKitTransaction(QObject *parent)
     : XTransaction(parent)
