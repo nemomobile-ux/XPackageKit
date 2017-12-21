@@ -17,6 +17,8 @@ OTHER_FILES += \
     XTransactionNamespace.qdoc
 
 SOURCES += \
+    XTransactionManager.cpp \
+    PackageKitBackend.cpp \
     XSsuTransaction.cpp \
     XChainTransaction.cpp \
     XTransaction.cpp \
@@ -30,8 +32,7 @@ SOURCES += \
     XUpdateTransaction.cpp \
     XDownloadTransaction.cpp \
     XProcessTransaction.cpp \
-    XTransactionManager.cpp \
-    PackageKitBackend.cpp
+    XGetDetailsTransaction.cpp
 
 PUBLIC_HEADERS = \
     XTransaction \
@@ -44,6 +45,8 @@ PUBLIC_HEADERS = \
 
 HEADERS += \
     $${PUBLIC_HEADERS} \
+    Debug.hpp \
+    PackageKitBackend.hpp \
     XSsuTransaction.hpp \
     XRefreshTransaction.hpp \
     XInstallTransaction.hpp \
@@ -55,8 +58,7 @@ HEADERS += \
     XUpdateTransaction.hpp \
     XDownloadTransaction.hpp \
     XProcessTransaction.hpp \
-    Debug.hpp \
-    PackageKitBackend.hpp
+    XGetDetailsTransaction.hpp
 
 DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII

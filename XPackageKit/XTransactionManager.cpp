@@ -11,6 +11,7 @@
 #include "XUpdateTransaction.hpp"
 #include "XDownloadTransaction.hpp"
 #include "XProcessTransaction.hpp"
+#include "XGetDetailsTransaction.hpp"
 
 #include "Debug.hpp"
 
@@ -251,6 +252,21 @@ XTransaction *XTransactionManager::getDepends(const QStringList &packageIds, XTr
     XTransaction *t = createTransaction<XGetDependsTransaction>(QStringLiteral("getDepends"), parent);
     t->setRequestDetails({{QStringLiteral("packageIds"), packageIds },
                           {QStringLiteral("filters"), QVariant::fromValue(filters) }});
+    return t;
+}
+
+/*!
+    \fn XTransaction *XTransactionManager::getDetails(const QStringList &packageIds, QObject *parent)
+
+    \a packageIds \a parent
+
+    Returns transaction.
+*/
+
+XTransaction *XTransactionManager::getDetails(const QStringList &packageIds, QObject *parent)
+{
+    XTransaction *t = createTransaction<XGetDetailsTransaction>(QStringLiteral("getDetails"), parent);
+    t->setRequestDetails({{QStringLiteral("packageIds"), packageIds }});
     return t;
 }
 
