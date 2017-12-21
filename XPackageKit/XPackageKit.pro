@@ -32,7 +32,8 @@ SOURCES += \
     XUpdateTransaction.cpp \
     XDownloadTransaction.cpp \
     XProcessTransaction.cpp \
-    XGetDetailsTransaction.cpp
+    XGetDetailsTransaction.cpp \
+    XGetFilesTransaction.cpp
 
 PUBLIC_HEADERS = \
     XTransaction \
@@ -58,7 +59,8 @@ HEADERS += \
     XUpdateTransaction.hpp \
     XDownloadTransaction.hpp \
     XProcessTransaction.hpp \
-    XGetDetailsTransaction.hpp
+    XGetDetailsTransaction.hpp \
+    XGetFilesTransaction.hpp
 
 DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII

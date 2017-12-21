@@ -12,6 +12,7 @@
 #include "XDownloadTransaction.hpp"
 #include "XProcessTransaction.hpp"
 #include "XGetDetailsTransaction.hpp"
+#include "XGetFilesTransaction.hpp"
 
 #include "Debug.hpp"
 
@@ -266,6 +267,21 @@ XTransaction *XTransactionManager::getDepends(const QStringList &packageIds, XTr
 XTransaction *XTransactionManager::getDetails(const QStringList &packageIds, QObject *parent)
 {
     XTransaction *t = createTransaction<XGetDetailsTransaction>(QStringLiteral("getDetails"), parent);
+    t->setRequestDetails({{QStringLiteral("packageIds"), packageIds }});
+    return t;
+}
+
+/*!
+    \fn XTransaction *XTransactionManager::getFiles(const QStringList &packageIds, QObject *parent)
+
+    \a packageIds \a parent
+
+    Returns transaction.
+*/
+
+XTransaction *XTransactionManager::getFiles(const QStringList &packageIds, QObject *parent)
+{
+    XTransaction *t = createTransaction<XGetFilesTransaction>(QStringLiteral("getFiles"), parent);
     t->setRequestDetails({{QStringLiteral("packageIds"), packageIds }});
     return t;
 }
