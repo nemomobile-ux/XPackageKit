@@ -52,6 +52,7 @@ protected slots:
     void setFinishedWithError(const QVariantHash &details);
     void setDelayedFinishedWithError(const QVariantHash &details);
     void onPreviousTransactionFailed();
+    void setResults(const QVector<QVariantHash> &results);
     void addResult(const QVariantHash &result);
     void setProgress(uint percentage);
     void setStatus(XTransactionNamespace::TransactionStatus status);

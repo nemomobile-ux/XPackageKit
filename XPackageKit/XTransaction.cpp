@@ -337,6 +337,17 @@ void XTransaction::onPreviousTransactionFailed()
 }
 
 /*!
+    \fn void XTransaction::setResults(const QVector<QVariantHash> &results)
+
+    \a results
+*/
+
+void XTransaction::setResults(const QVector<QVariantHash> &results)
+{
+    m_results = results;
+}
+
+/*!
     \fn void XTransaction::addResult(const QVariantHash &result)
 
     \a result
