@@ -80,7 +80,7 @@ rm -rf %{buildroot}
 
 %files verify
 %defattr(-,root,root,-)
-%{_bindir}/xpackagekit-verify-cache
+%attr(0755, root, root) %{_bindir}/xpackagekit-verify-cache
 
 %post
 /sbin/ldconfig
