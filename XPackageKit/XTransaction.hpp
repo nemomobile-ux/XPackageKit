@@ -23,6 +23,7 @@ public:
     void setExitOnFailure(bool exitOnFailure);
 
     QVariantHash errorDetails() const;
+    QString errorDetailsString() const;
 
     QVector<QVariantHash> results() const;
     QVariantHash requestDetails() const;

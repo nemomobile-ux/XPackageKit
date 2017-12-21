@@ -1,6 +1,8 @@
 #include "XTransaction.hpp"
 #include "XTransactionManager.hpp"
 
+#include <QJsonDocument>
+
 #include "Debug.hpp"
 
 /*!
@@ -158,6 +160,15 @@ void XTransaction::setExitOnFailure(bool exitOnFailure)
 QVariantHash XTransaction::errorDetails() const
 {
     return m_errorDetails;
+}
+
+/*!
+    Returns something
+*/
+
+QString XTransaction::errorDetailsString() const
+{
+    return QString::fromUtf8(QJsonDocument::fromVariant(m_errorDetails).toJson(QJsonDocument::Compact));
 }
 
 /*!
