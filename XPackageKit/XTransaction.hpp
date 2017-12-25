@@ -13,6 +13,7 @@ class XTransaction : public QObject
     Q_OBJECT
 public:
     explicit XTransaction(QObject *parent = nullptr);
+    XTransaction(const QString &newObjectName, QObject *parent = nullptr);
     bool isRunning() const;
     bool isFinished() const;
     bool isSucceeded() const;

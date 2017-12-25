@@ -8,7 +8,7 @@ class XGetDependsTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XGetDependsTransaction(QObject *parent = nullptr);
+    XGetDependsTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 private slots:
     void onTransactionPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);

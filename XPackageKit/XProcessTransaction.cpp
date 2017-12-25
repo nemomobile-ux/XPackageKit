@@ -1,7 +1,7 @@
 #include "XProcessTransaction.hpp"
 
-XProcessTransaction::XProcessTransaction(QObject *parent)
-    : XTransaction(parent)
+XProcessTransaction::XProcessTransaction(const QString &newObjectName, QObject *parent)
+    : XTransaction(newObjectName, parent)
     , m_process(new QProcess(this))
 {
     connect(m_process, (void (QProcess::*)(int))&QProcess::finished, this, &XProcessTransaction::onProcessFinished);

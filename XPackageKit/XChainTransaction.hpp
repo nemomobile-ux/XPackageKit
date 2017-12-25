@@ -7,7 +7,7 @@ class XChainTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    XChainTransaction(QObject *parent = nullptr);
+    XChainTransaction(const QString &newObjectName, QObject *parent = nullptr);
     ~XChainTransaction();
 
     bool addTransaction(XTransaction *transaction);

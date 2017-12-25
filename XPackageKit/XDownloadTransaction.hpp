@@ -8,7 +8,7 @@ class XDownloadTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XDownloadTransaction(QObject *parent = nullptr);
+    XDownloadTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 private slots:
     void onTransactionPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);

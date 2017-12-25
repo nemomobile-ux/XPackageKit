@@ -1,8 +1,8 @@
 #include "XResolveTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XResolveTransaction::XResolveTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XResolveTransaction::XResolveTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 }
 

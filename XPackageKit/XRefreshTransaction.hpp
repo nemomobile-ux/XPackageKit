@@ -8,7 +8,7 @@ class XRefreshTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XRefreshTransaction(QObject *parent = nullptr);
+    XRefreshTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 protected:
     PackageKit::Transaction *createTransaction() override;

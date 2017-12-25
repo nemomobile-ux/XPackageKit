@@ -7,7 +7,7 @@ class XGetUpdatesTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XGetUpdatesTransaction(QObject *parent = nullptr);
+    XGetUpdatesTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 private slots:
     void onTransactionPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);

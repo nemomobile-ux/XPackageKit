@@ -9,7 +9,7 @@ class XSsuTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    explicit XSsuTransaction(QObject *parent = nullptr);
+    explicit XSsuTransaction(const QString &newObjectName, QObject *parent = nullptr);
     QString repoName() const;
 
     enum class SsuRepoAction {

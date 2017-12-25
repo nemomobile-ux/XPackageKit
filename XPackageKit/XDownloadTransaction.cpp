@@ -1,8 +1,8 @@
 #include "XDownloadTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XDownloadTransaction::XDownloadTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XDownloadTransaction::XDownloadTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 }
 

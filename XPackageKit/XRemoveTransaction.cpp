@@ -1,8 +1,8 @@
 #include "XRemoveTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XRemoveTransaction::XRemoveTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XRemoveTransaction::XRemoveTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 }
 

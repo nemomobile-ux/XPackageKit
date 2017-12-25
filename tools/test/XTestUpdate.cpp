@@ -3,9 +3,8 @@
 #include <QDebug>
 
 XTestUpdate::XTestUpdate(const QString &packageName, QObject *parent)
-   : XChainTransaction(parent)
+   : XChainTransaction(QStringLiteral("testChain-%1").arg(QDateTime::currentMSecsSinceEpoch()), parent)
 {
-    setObjectName(QStringLiteral("testChain-%1").arg(QDateTime::currentMSecsSinceEpoch()));
     this->packageName = packageName;
 
     // set maximum amount of transactions inside chain, used to calculate progress

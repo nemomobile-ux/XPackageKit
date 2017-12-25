@@ -8,7 +8,7 @@ class XRemoveTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XRemoveTransaction(QObject *parent = nullptr);
+    XRemoveTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 private slots:
     void onTransactionPackage(PackageKit::Transaction::Info info, const QString &packageID, const QString &summary);

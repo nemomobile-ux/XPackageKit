@@ -1,8 +1,8 @@
 #include "XUpdateTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XUpdateTransaction::XUpdateTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XUpdateTransaction::XUpdateTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 }
 

@@ -3,8 +3,8 @@
 
 #include "Debug.hpp"
 
-XPackageKitTransaction::XPackageKitTransaction(QObject *parent)
-    : XTransaction(parent)
+XPackageKitTransaction::XPackageKitTransaction(const QString &newObjectName, QObject *parent)
+    : XTransaction(newObjectName, parent)
 {
     setStatus(XTransactionNamespace::PackageStatusUnknown);
 }

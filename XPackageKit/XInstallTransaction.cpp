@@ -1,8 +1,8 @@
 #include "XInstallTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XInstallTransaction::XInstallTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XInstallTransaction::XInstallTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 
 }

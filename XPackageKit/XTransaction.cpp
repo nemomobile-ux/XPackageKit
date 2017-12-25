@@ -75,6 +75,22 @@ XTransaction::XTransaction(QObject *parent)
 }
 
 /*!
+   \a newObjectName \a parent
+*/
+
+XTransaction::XTransaction(const QString &newObjectName, QObject *parent)
+    : QObject(parent)
+    , m_running(false)
+    , m_finished(false)
+    , m_succeeded(true)
+    , m_exitOnFailure(true)
+    , m_progress(0)
+    , m_status(XTransactionNamespace::TransactionStatusUnknown)
+{
+    setObjectName(newObjectName);
+}
+
+/*!
     \fn bool XTransaction::isRunning() const
 
     Returns \c true if \c false otherwise.

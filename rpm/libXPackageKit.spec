@@ -1,6 +1,6 @@
 Name:       libXPackageKit
 Summary:    PackageKitQt wrapper library
-Version:    0.1.0
+Version:    1.0.0
 Release:    1
 Group:      System/Libraries
 License:    Proprietary

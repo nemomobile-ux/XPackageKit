@@ -8,7 +8,7 @@ class XPackageKitTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    XPackageKitTransaction(QObject *parent = nullptr);
+    XPackageKitTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
     struct ErrorStruct {
         PackageKit::Transaction::Error error;

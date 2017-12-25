@@ -8,8 +8,8 @@
 
 #include "Debug.hpp"
 
-XSsuTransaction::XSsuTransaction(QObject *parent)
-: XTransaction(parent)
+XSsuTransaction::XSsuTransaction(const QString &newObjectName, QObject *parent)
+    : XTransaction(newObjectName, parent)
 {
     setStatus(XTransactionNamespace::RepoStatusIdle);
 }

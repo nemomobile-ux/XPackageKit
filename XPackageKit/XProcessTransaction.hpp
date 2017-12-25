@@ -9,7 +9,7 @@ class XProcessTransaction : public XTransaction
 {
     Q_OBJECT
 public:
-    explicit XProcessTransaction(QObject *parent = nullptr);
+    explicit XProcessTransaction(const QString &newObjectName, QObject *parent = nullptr);
     QString program() const;
     QStringList arguments() const;
 

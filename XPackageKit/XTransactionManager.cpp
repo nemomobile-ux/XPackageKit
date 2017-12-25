@@ -32,8 +32,7 @@ T *createTransaction(const QString &objectName, QObject *parent)
         parent = XTransactionManager::defaultParent();
     }
 
-    T *t = new T(parent);
-    t->setObjectName(QStringLiteral("%1-%2").arg(objectName).arg(QDateTime::currentMSecsSinceEpoch()));
+    T *t = new T(QStringLiteral("%1-%2").arg(objectName).arg(QDateTime::currentMSecsSinceEpoch()), parent);
     if (XTransactionManager::isAutodelete()) {
         QObject::connect(t, &XTransaction::finished, t, &QObject::deleteLater);
     }

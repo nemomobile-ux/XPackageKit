@@ -39,8 +39,8 @@ public:
     \a transaction
 */
 
-XChainTransaction::XChainTransaction(QObject *parent)
-    : XTransaction(parent)
+XChainTransaction::XChainTransaction(const QString &newObjectName, QObject *parent)
+    : XTransaction(newObjectName, parent)
     , d(new Private)
 {
 }

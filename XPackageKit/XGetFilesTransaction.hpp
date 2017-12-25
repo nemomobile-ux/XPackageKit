@@ -7,7 +7,7 @@ class XGetFilesTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XGetFilesTransaction(QObject *parent = nullptr);
+    XGetFilesTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 private slots:
     void onTransactionFiles(const QString &packageID, const QStringList &filenames);

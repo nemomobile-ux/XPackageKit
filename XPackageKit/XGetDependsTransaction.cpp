@@ -1,8 +1,8 @@
 #include "XGetDependsTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XGetDependsTransaction::XGetDependsTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XGetDependsTransaction::XGetDependsTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 }
 

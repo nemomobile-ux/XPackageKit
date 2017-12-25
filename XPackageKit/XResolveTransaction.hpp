@@ -8,7 +8,7 @@ class XResolveTransaction : public XPackageKitTransaction
 {
     Q_OBJECT
 public:
-    XResolveTransaction(QObject *parent = nullptr);
+    XResolveTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 protected:
     PackageKit::Transaction *createTransaction() override;

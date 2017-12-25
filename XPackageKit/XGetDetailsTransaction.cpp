@@ -1,8 +1,8 @@
 #include "XGetDetailsTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XGetDetailsTransaction::XGetDetailsTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XGetDetailsTransaction::XGetDetailsTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 
 }

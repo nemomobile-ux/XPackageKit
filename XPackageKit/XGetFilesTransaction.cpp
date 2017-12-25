@@ -1,8 +1,8 @@
 #include "XGetFilesTransaction.hpp"
 #include "PackageKitBackend.hpp"
 
-XGetFilesTransaction::XGetFilesTransaction(QObject *parent)
-    : XPackageKitTransaction(parent)
+XGetFilesTransaction::XGetFilesTransaction(const QString &newObjectName, QObject *parent)
+    : XPackageKitTransaction(newObjectName, parent)
 {
 
 }
