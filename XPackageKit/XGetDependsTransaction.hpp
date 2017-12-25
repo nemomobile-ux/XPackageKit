@@ -2,7 +2,6 @@
 #define XGETDEPENDSTRANSACTION_HPP
 
 #include "XPackageKitTransaction.hpp"
-#include <Transaction>
 
 class XGetDependsTransaction : public XPackageKitTransaction
 {

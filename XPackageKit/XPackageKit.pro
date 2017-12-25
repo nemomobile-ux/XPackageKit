@@ -33,7 +33,8 @@ SOURCES += \
     XDownloadTransaction.cpp \
     XProcessTransaction.cpp \
     XGetDetailsTransaction.cpp \
-    XGetFilesTransaction.cpp
+    XGetFilesTransaction.cpp \
+    XTransactionNamespace.cpp
 
 PUBLIC_HEADERS = \
     XTransaction \
@@ -46,7 +47,6 @@ PUBLIC_HEADERS = \
 
 HEADERS += \
     $${PUBLIC_HEADERS} \
-    Debug.hpp \
     PackageKitBackend.hpp \
     XSsuTransaction.hpp \
     XRefreshTransaction.hpp \

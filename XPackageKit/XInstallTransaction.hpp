@@ -2,7 +2,6 @@
 #define XINSTALLTRANSACTION_HPP
 
 #include "XPackageKitTransaction.hpp"
-#include <Transaction>
 
 class XInstallTransaction : public XPackageKitTransaction
 {

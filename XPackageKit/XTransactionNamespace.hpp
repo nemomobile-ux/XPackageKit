@@ -2,6 +2,12 @@
 #define XTRANSACTIONNAMESPACE_HPP
 
 #include <QObject>
+#include <QLoggingCategory>
+
+#define xInfo() XTransactionNamespace::info(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, this)
+#define xDebug() XTransactionNamespace::debug(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, this)
+#define xWarning() XTransactionNamespace::warning(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, this)
+#define xCritical() XTransactionNamespace::critical(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, this)
 
 class XTransactionNamespace
 {
@@ -75,6 +81,11 @@ public:
 
         TransactionStatusUnknown = 100000
     };
+
+    static QDebug info(const char* file, int line, const char* func, QObject *object);
+    static QDebug debug(const char* file, int line, const char* func, QObject *object);
+    static QDebug warning(const char* file, int line, const char* func, QObject *object);
+    static QDebug critical(const char* file, int line, const char* func, QObject *object);
 
 #ifndef Q_QDOC
     Q_ENUM(TransactionStatus)

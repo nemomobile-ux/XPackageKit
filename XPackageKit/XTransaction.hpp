@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QVector>
 #include <QVariantHash>
-#include <QTextStream>
 
 #include "XTransactionNamespace.hpp"
 

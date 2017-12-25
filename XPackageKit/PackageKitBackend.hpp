@@ -2,7 +2,6 @@
 #define PACKAGEKITBACKEND_HPP
 
 #include <QObject>
-
 #include <Transaction>
 
 class PackageKitBackend : public QObject

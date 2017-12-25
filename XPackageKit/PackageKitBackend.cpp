@@ -1,5 +1,4 @@
 #include "PackageKitBackend.hpp"
-
 #include <Daemon>
 
 PackageKit::Transaction *PackageKitBackend::mkResolveTransaction(const QStringList &packageNames, PackageKit::Transaction::Filters filters)

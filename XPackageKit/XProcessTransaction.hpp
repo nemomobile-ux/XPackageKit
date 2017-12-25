@@ -2,7 +2,6 @@
 #define XPROCESSTRANSACTION_HPP
 
 #include "XTransaction.hpp"
-
 #include <QProcess>
 
 class XProcessTransaction : public XTransaction

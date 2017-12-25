@@ -14,8 +14,6 @@
 #include "XGetDetailsTransaction.hpp"
 #include "XGetFilesTransaction.hpp"
 
-#include "Debug.hpp"
-
 /*!
     \class XTransactionManager
     \brief Manager for creating transactions

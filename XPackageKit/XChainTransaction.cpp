@@ -1,8 +1,6 @@
 #include "XChainTransaction.hpp"
 #include <QMetaMethod>
 
-#include "Debug.hpp"
-
 class XChainTransaction::Private
 {
 public:
@@ -52,15 +50,15 @@ XChainTransaction::~XChainTransaction()
 
 bool XChainTransaction::addTransaction(XTransaction *transaction)
 {
+    xDebug() << Q_FUNC_INFO << "Add transaction" << transaction->objectName() << "to" << objectName();
     if (!transaction) {
-        xCritical() << "Unable to add transaction: transaction is a nullptr";
+        xCritical() << Q_FUNC_INFO << "Unable to add transaction: transaction is a nullptr";
         return false;
     }
     if (d->transactions.contains(transaction)) {
-        xCritical() << "Unable to add transaction: transaction is already in the list";
+        xCritical() << Q_FUNC_INFO << "Unable to add transaction: transaction is already in the list";
         return false;
     }
-    xDebug() << "Add transaction" << transaction->objectName() << "to" << objectName();
     d->transactions.append(transaction);
     return true;
 }
@@ -227,7 +225,7 @@ void XChainTransaction::runTransactionAtIndex(uint index)
 {
     d->currentTransactionIndex = index;
     d->currentTransaction = d->transactions.at(index);
-    xDebug() << "starting" << d->currentTransaction->objectName() << "from chain" << objectName();
+    xDebug() << Q_FUNC_INFO << "starting" << d->currentTransaction->objectName() << "from chain" << objectName();
     connect(d->currentTransaction, &XTransaction::finished, this, &XChainTransaction::onTransactionFinished);
     connect(d->currentTransaction, &XTransaction::progressChanged, this, &XChainTransaction::onTransactionProgressChanged);
     d->currentTransaction->start();

@@ -6,8 +6,6 @@
 #include <QDBusPendingReply>
 #include <QDBusMessage>
 
-#include "Debug.hpp"
-
 XSsuTransaction::XSsuTransaction(const QString &newObjectName, QObject *parent)
     : XTransaction(newObjectName, parent)
 {

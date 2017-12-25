@@ -2,7 +2,6 @@
 #define XREMOVETRANSACTION_HPP
 
 #include "XPackageKitTransaction.hpp"
-#include <Transaction>
 
 class XRemoveTransaction : public XPackageKitTransaction
 {

@@ -2,7 +2,6 @@
 #define XUPDATETRANSACTION_HPP
 
 #include "XPackageKitTransaction.hpp"
-#include <Transaction>
 
 class XUpdateTransaction : public XPackageKitTransaction
 {

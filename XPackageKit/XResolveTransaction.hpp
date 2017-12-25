@@ -2,7 +2,6 @@
 #define XRESOLVETRANSACTION_HPP
 
 #include "XPackageKitTransaction.hpp"
-#include <Transaction>
 
 class XResolveTransaction : public XPackageKitTransaction
 {

@@ -3,8 +3,6 @@
 
 #include <QJsonDocument>
 
-#include "Debug.hpp"
-
 /*!
     \class XTransaction
     \brief Base class for transactions
@@ -257,14 +255,14 @@ bool XTransaction::runAfter(XTransaction *transaction)
 
 void XTransaction::restart()
 {
-    xDebug() << "###";
+    xDebug() << Q_FUNC_INFO;
     if (m_running) {
-        xWarning() << "Unable to restart: transaction is already running (details:" << m_requestDetails << ")";
+        xWarning() << Q_FUNC_INFO << "Unable to restart: transaction is already running (details:" << m_requestDetails << ")";
         return;
     }
 
     if (m_finished) {
-        xDebug() << "Actually restart transaction";
+        xDebug() << Q_FUNC_INFO << "Actually restart transaction";
         m_finished = false;
     }
 
@@ -277,21 +275,21 @@ void XTransaction::restart()
 
 void XTransaction::start()
 {
-    xDebug() << objectName();
-    xDebug() << requestDetails();
+    xDebug() << Q_FUNC_INFO << objectName();
+    xDebug() << Q_FUNC_INFO << requestDetails();
     if (requestDetails().contains(QStringLiteral("filters"))) {
-        xDebug() << requestDetails().value(QStringLiteral("filters")).value<XTransactionNamespace::Filters>();
+        xDebug() << Q_FUNC_INFO << requestDetails().value(QStringLiteral("filters")).value<XTransactionNamespace::Filters>();
     }
     if (requestDetails().contains(QStringLiteral("transactionFlags"))) {
-        xDebug() << requestDetails().value(QStringLiteral("transactionFlags")).value<XTransactionNamespace::TransactionFlags>();
+        xDebug() << Q_FUNC_INFO << requestDetails().value(QStringLiteral("transactionFlags")).value<XTransactionNamespace::TransactionFlags>();
     }
     if (m_running) {
-        xWarning() << "Unable to start: transaction is already running (details:" << m_requestDetails << ")";
+        xWarning() << Q_FUNC_INFO << "Unable to start: transaction is already running (details:" << m_requestDetails << ")";
         return;
     }
 
     if (m_finished) {
-        xWarning() << "Unable to start: transaction is already finished (details:" << m_requestDetails << ")";
+        xWarning() << Q_FUNC_INFO << "Unable to start: transaction is already finished (details:" << m_requestDetails << ")";
         return;
     }
     m_running = true;
@@ -305,8 +303,8 @@ void XTransaction::start()
 
 void XTransaction::setFinished()
 {
-    xDebug() << objectName();
-    xDebug() << results();
+    xDebug() << Q_FUNC_INFO << objectName();
+    xDebug() << Q_FUNC_INFO << results();
     m_finished = true;
     m_running = false;
     if (m_succeeded) {
@@ -323,7 +321,7 @@ void XTransaction::setFinished()
 
 void XTransaction::setFinishedWithError(const QVariantHash &details)
 {
-    xDebug() << details;
+    xDebug() << Q_FUNC_INFO << details;
     m_succeeded = false;
     m_errorDetails = details;
     emit failed(this, details);
@@ -338,7 +336,7 @@ void XTransaction::setFinishedWithError(const QVariantHash &details)
 
 void XTransaction::setDelayedFinishedWithError(const QVariantHash &details)
 {
-    xDebug() << details;
+    xDebug() << Q_FUNC_INFO << details;
     QMetaObject::invokeMethod(this, "setFinishedWithError", Qt::QueuedConnection, Q_ARG(QVariantHash, details)); // Invoke after return
 }
 
@@ -386,7 +384,7 @@ void XTransaction::setProgress(uint percentage)
         return;
     }
 
-    xDebug() << percentage;
+    xDebug() << Q_FUNC_INFO << percentage;
 
     m_progress = percentage;
     emit progressChanged(this, percentage);
@@ -404,7 +402,7 @@ void XTransaction::setStatus(XTransactionNamespace::TransactionStatus status)
         return;
     }
 
-    xDebug() << status;
+    xDebug() << Q_FUNC_INFO << status;
 
     m_status = status;
     emit statusChanged(this, status);
