@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     qDebug() << "### XTestUpdate statred";
 
-    XTestUpdate *test = new XTestUpdate(QStringLiteral("repo-meta-package"));
+    XTestUpdate *test = new XTestUpdate(QStringLiteral("metapackage"), {QStringLiteral("personal"), });
     QTimer::singleShot(0, test, &XTestUpdate::start);
     QObject::connect(test, &XTestUpdate::packagesToBeInstalled, [](const QStringList &packageNames) {
         qDebug() << "### ### packagesToBeInstalled:" << packageNames;
@@ -38,6 +38,10 @@ int main(int argc, char *argv[])
     });
     QObject::connect(test, &XTestUpdate::packagesRemoved, [](const QStringList &packageNames) {
         qDebug() << "### ### packagesRemoved:" << packageNames;
+    });
+    QObject::connect(test, &XTestUpdate::packageNotInstalled, []() {
+        qDebug() << "### ### package is not installed";
+        qApp->quit();
     });
     QObject::connect(test, &XTestUpdate::finished, [](XTransaction *tx) {
         qDebug() << "### XTestUpdate finished" << tx->results() << tx->errorDetails();

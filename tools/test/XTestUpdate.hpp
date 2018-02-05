@@ -11,10 +11,12 @@ class XTestUpdate : public XChainTransaction
 {
     Q_OBJECT
 public:
-    explicit XTestUpdate(const QString &packageName, QObject *parent = 0);
+    explicit XTestUpdate(const QString &packageName, const QStringList &repoNames, QObject *parent = nullptr);
 
 private:
     void checkUpdateInstalledDepends();
+
+    QStringList repoNames;
 
     QString packageName;
     QString installedPkgId;
@@ -48,6 +50,7 @@ signals:
     void packagesUpdated(const QStringList &packageNames);
     void packagesToBeRemoved(const QStringList &packageNames);
     void packagesRemoved(const QStringList &packageNames);
+    void packageNotInstalled();
 
 };
 

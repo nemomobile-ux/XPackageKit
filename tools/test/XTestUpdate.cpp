@@ -2,13 +2,14 @@
 #include <QDateTime>
 #include <QDebug>
 
-XTestUpdate::XTestUpdate(const QString &packageName, QObject *parent)
-   : XChainTransaction(QStringLiteral("testChain-%1").arg(QDateTime::currentMSecsSinceEpoch()), parent)
+XTestUpdate::XTestUpdate(const QString &packageName, const QStringList &repoNames, QObject *parent)
+   : XChainTransaction(QStringLiteral("myUpdate-%1-%2").arg(packageName).arg(QDateTime::currentMSecsSinceEpoch()), parent)
 {
     this->packageName = packageName;
+    this->repoNames = repoNames;
 
     // set maximum amount of transactions inside chain, used to calculate progress
-    setTransactionsMaxCount(10);
+    setTransactionsMaxCount(10 + repoNames.count());
 
     XTransaction *res1 = XTransactionManager::resolve({packageName}, XTransactionNamespace::FilterInstalled);
     connect(res1, &XTransaction::finished, this, &XTestUpdate::onResolveInstalledFinished);
@@ -37,13 +38,16 @@ void XTestUpdate::checkUpdateInstalledDepends()
 void XTestUpdate::onResolveInstalledFinished(XTransaction *transaction)
 {
     if (transaction->results().isEmpty()) {
-        qDebug() << "### package not installed:" << packageName;
+        emit packageNotInstalled();
         return;
     }
 
     installedPkgId = transaction->results().first().value(QStringLiteral("packageID")).toString();
-
-    *this << XTransactionManager::refreshCache(true);
+    if (!repoNames.isEmpty()) {
+        for (const QString &repoName : repoNames) {
+            *this << XTransactionManager::refreshRepository(repoName, true);
+        }
+    }
 
     XTransaction *dep1 = XTransactionManager::getDepends({installedPkgId}, XTransactionNamespace::FilterInstalled);
     connect(dep1, &XTransaction::finished, this, &XTestUpdate::onDependsInstalledFinished);
@@ -64,17 +68,13 @@ void XTestUpdate::onDependsInstalledFinished(XTransaction *transaction)
 void XTestUpdate::onResolveAvailableFinished(XTransaction *transaction)
 {
     if (transaction->results().isEmpty()) {
-        qDebug() << "### no packages resolved for:" << packageName;
         return;
     }
 
     updatePkgId = transaction->results().first().value(QStringLiteral("packageID")).toString();
 
     if (XTransactionManager::isInstalled(updatePkgId)) {
-        qDebug() << "### no update candidate for:" << packageName;
-
         checkUpdateInstalledDepends();
-
         return;
     }
 
@@ -127,13 +127,6 @@ void XTestUpdate::onDependsAvailableFinished(XTransaction *transaction)
 
 void XTestUpdate::onUpdateDownloadFinished(XTransaction *transaction)
 {
-    if (transaction->results().count() == 0) {
-        QVariantHash errorDetails;
-        errorDetails[QStringLiteral("chain-error")] = tr("No packages to download");
-        setFinishedWithError(errorDetails);
-        return;
-    }
-
     *this << XTransactionManager::processTransaction(QStringLiteral("/usr/bin/xpackagekit-verify-cache"),
                                                      QStringList() << QStringLiteral("/var/cache/zypp/packages"));
 
