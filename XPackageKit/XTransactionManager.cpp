@@ -13,6 +13,7 @@
 #include "XProcessTransaction.hpp"
 #include "XGetDetailsTransaction.hpp"
 #include "XGetFilesTransaction.hpp"
+#include "XGetPackagesTransaction.hpp"
 
 /*!
     \class XTransactionManager
@@ -280,6 +281,21 @@ XTransaction *XTransactionManager::getFiles(const QStringList &packageIds, QObje
 {
     XTransaction *t = createTransaction<XGetFilesTransaction>(QStringLiteral("getFiles"), parent);
     t->setRequestDetails({{QStringLiteral("packageIds"), packageIds }});
+    return t;
+}
+
+/*!
+    \fn XTransaction *XTransactionManager::getPackages(XTransactionNamespace::Filters filters, QObject *parent)
+
+    \a transactionFlags \a parent
+
+    Returns transaction.
+*/
+
+XTransaction *XTransactionManager::getPackages(XTransactionNamespace::Filters filters, QObject *parent)
+{
+    XTransaction *t = createTransaction<XGetPackagesTransaction>(QStringLiteral("getPackages"), parent);
+    t->setRequestDetails({{QStringLiteral("filters"), QVariant::fromValue(filters) }});
     return t;
 }
 

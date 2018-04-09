@@ -163,6 +163,18 @@ PackageKit::Transaction *PackageKitBackend::mkGetFilesTransaction(const QStringL
     return rpc;
 }
 
+PackageKit::Transaction *PackageKitBackend::mkGetPackagesTransaction(PackageKit::Transaction::Filters filters)
+{
+    PackageKit::Transaction *rpc = nullptr;
+#ifdef NEMO_PACKAGE_KIT
+    rpc = new PackageKit::Transaction();
+    rpc->getPackages(filters);
+#else
+    rpc = PackageKit::Daemon::getPackages(filters);
+#endif
+    return rpc;
+}
+
 PackageKit::Transaction *PackageKitBackend::mkUpdatePackagesTransaction(const QStringList &packageIds, PackageKit::Transaction::TransactionFlags flags)
 {
     PackageKit::Transaction *rpc = nullptr;

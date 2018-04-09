@@ -22,6 +22,7 @@ public:
     static PackageKit::Transaction *mkGetRequiresTransaction(const QStringList &packageIds, PackageKit::Transaction::Filters filters = PackageKit::Transaction::FilterNone);
     static PackageKit::Transaction *mkGetDetailsTransaction(const QStringList &packageIds);
     static PackageKit::Transaction *mkGetFilesTransaction(const QStringList &packageIds);
+    static PackageKit::Transaction *mkGetPackagesTransaction(PackageKit::Transaction::Filters filters = PackageKit::Transaction::FilterNone);
     static PackageKit::Transaction *mkUpdatePackagesTransaction(const QStringList &packageIds, PackageKit::Transaction::TransactionFlags flags = PackageKit::Transaction::TransactionFlagNone);
     static PackageKit::Transaction *mkRemovePackagesTransaction(const QStringList &packageIds, bool allowDeps = false, bool autoRemove = false);
     static PackageKit::Transaction *mkDownloadPackagesTransaction(const QStringList &packageIds, bool storeInCache = false);

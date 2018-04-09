@@ -57,6 +57,9 @@ public:
     static XTransaction *getFiles(const QStringList &packageIds,
                                   QObject *parent = nullptr);
 
+    static XTransaction *getPackages(XTransactionNamespace::Filters filters = XTransactionNamespace::FilterNone,
+                                     QObject *parent = nullptr);
+
     static XTransaction *updatePackages(const QStringList &packageIds,
                                         XTransactionNamespace::TransactionFlags transactionFlags = XTransactionNamespace::TransactionFlagNone,
                                         QObject *parent = nullptr);
