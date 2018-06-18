@@ -10,12 +10,7 @@ public:
     XGetDetailsTransaction(const QString &newObjectName, QObject *parent = nullptr);
 
 private slots:
-    void onTransactionDetails(const QString &packageID,
-                              const QString &license,
-                              PackageKit::Transaction::Group group,
-                              const QString &detail,
-                              const QString &url,
-                              qulonglong size);
+    void onTransactionDetails(const PackageKit::Details &values);
 
 protected:
     PackageKit::Transaction *createTransaction() override;

@@ -7,7 +7,7 @@ License:    WTFPL
 URL:        https://git.merproject.org/mer-core/libXPackageKit
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(packagekit-qt5)
+BuildRequires:  pkgconfig(packagekitqt5)
 BuildRequires:  qt5-tools
 BuildRequires:  mer-qdoc-template
 

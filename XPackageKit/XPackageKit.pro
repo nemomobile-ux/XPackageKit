@@ -70,13 +70,7 @@ DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 QMAKE_CXXFLAGS += -Wall
 QMAKE_CXXFLAGS += -Werror=return-type
 
-linux-g++ { # mer
-    PKGCONFIG += packagekit-qt5
-    DEFINES += NEMO_PACKAGE_KIT
-    INCLUDEPATH += /usr/include/PackageKit/packagekit-qt5
-} else { # Upstream PackageKit Qt5
-    PKGCONFIG += packagekitqt5
-}
+PKGCONFIG += packagekitqt5
 
 target.path = /usr/lib
 

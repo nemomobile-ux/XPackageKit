@@ -3,6 +3,7 @@
 
 #include "XTransactionManager.hpp"
 #include <Transaction>
+#include <Details>
 
 class XPackageKitTransaction : public XTransaction
 {

@@ -7,20 +7,16 @@ XGetDetailsTransaction::XGetDetailsTransaction(const QString &newObjectName, QOb
 
 }
 
-void XGetDetailsTransaction::onTransactionDetails(const QString &packageID,
-                                                  const QString &license,
-                                                  PackageKit::Transaction::Group group,
-                                                  const QString &detail,
-                                                  const QString &url,
-                                                  qulonglong size)
+void XGetDetailsTransaction::onTransactionDetails(const PackageKit::Details &values)
 {
     addResult({
-                  {QStringLiteral("packageID"), packageID},
-                  {QStringLiteral("license"), license},
-                  {QStringLiteral("group"), QVariant::fromValue(group)},
-                  {QStringLiteral("detail"), detail},
-                  {QStringLiteral("url"), url},
-                  {QStringLiteral("size"), size},
+                  {QStringLiteral("packageID"), values.packageId()},
+                  {QStringLiteral("license"), values.license()},
+                  {QStringLiteral("group"), QVariant::fromValue(values.group())},
+                  {QStringLiteral("description"), values.description()},
+                  {QStringLiteral("summary"), values.summary()},
+                  {QStringLiteral("url"), values.url()},
+                  {QStringLiteral("size"), values.size()},
               });
 }
 
