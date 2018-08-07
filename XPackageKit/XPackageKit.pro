@@ -48,6 +48,7 @@ PUBLIC_HEADERS = \
 
 HEADERS += \
     $${PUBLIC_HEADERS} \
+    ssud_dbus.h \
     PackageKitBackend.hpp \
     XSsuTransaction.hpp \
     XRefreshTransaction.hpp \

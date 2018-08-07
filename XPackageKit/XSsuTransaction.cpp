@@ -30,6 +30,9 @@ void XSsuTransaction::startEvent()
     case SsuRepoAction::Disable:
         modifyRepo(action());
         break;
+    case SsuRepoAction::List:
+        listRepos();
+        break;
     default:
         break;
     }
@@ -50,6 +53,11 @@ void XSsuTransaction::modifyRepo(XSsuTransaction::SsuRepoAction action)
 {
     const int actionInt = static_cast<int>(action);
     callSsuMethod(QStringLiteral("modifyRepo"), { actionInt, repoName() });
+}
+
+void XSsuTransaction::listRepos()
+{
+    callSsuMethod(QStringLiteral("listRepos"), { requestDetails().value(QStringLiteral("rnd")).toBool() });
 }
 
 void XSsuTransaction::callSsuMethod(const QString &method, const QVariantList &arguments)
@@ -86,6 +94,14 @@ void XSsuTransaction::onSsuCallReply(QDBusPendingCallWatcher *watcher)
                                  {QStringLiteral("backend_details"), tr("SSU call failed")}
                              });
         return;
+    } else if (action() == SsuRepoAction::List) {
+        const QList<SsuRepo> repoList = QDBusPendingReply<QList<SsuRepo>>(*watcher);
+        for (const SsuRepo &repo : repoList) {
+            addResult({
+                          {QStringLiteral("name"), repo.name},
+                          {QStringLiteral("url"), repo.url},
+                      });
+        }
     }
 
     setFinished();

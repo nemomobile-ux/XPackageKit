@@ -18,6 +18,8 @@ public:
     static void setAutodelete(bool autodelete);
     static bool isAutodelete();
 
+    static void registerTypes();
+
     static XTransaction *addRepository(const QString &repoName, const QVariantHash &details,
                                        QObject *parent = nullptr);
 
@@ -25,7 +27,9 @@ public:
                                           QObject *parent = nullptr);
 
     static XTransaction *setRepositoryEnabled(const QString &repoName, bool enable = true,
-                                              QObject *parent = nullptr);
+                                              QObject *parent = nullptr);    
+
+    static XTransaction *listRepos(bool rnd = false, QObject *parent = nullptr);
 
     static XTransaction *refreshRepository(const QString &repoName, bool force = false,
                                            QObject *parent = nullptr);
