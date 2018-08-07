@@ -2,6 +2,7 @@
 #define XSsuTransaction_hpp
 
 #include "XTransaction.hpp"
+#include "ssud_dbus.h"
 
 QT_FORWARD_DECLARE_CLASS(QDBusPendingCallWatcher)
 
@@ -18,6 +19,7 @@ public:
         Add     = 1,
         Disable = 2,
         Enable  = 3,
+        List    = 100,
         Invalid
     };
     Q_ENUM(SsuRepoAction)
@@ -31,6 +33,7 @@ protected:
 
     void addRepo();
     void modifyRepo(SsuRepoAction action);
+    void listRepos();
 
     void callSsuMethod(const QString &method, const QVariantList &arguments);
 

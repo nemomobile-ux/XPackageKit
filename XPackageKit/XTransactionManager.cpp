@@ -15,6 +15,8 @@
 #include "XGetFilesTransaction.hpp"
 #include "XGetPackagesTransaction.hpp"
 
+#include <QDBusMetaType>
+
 /*!
     \class XTransactionManager
     \brief Manager for creating transactions
@@ -84,6 +86,18 @@ bool XTransactionManager::isAutodelete()
 }
 
 /*!
+    \fn bool XTransactionManager::registerTypes()
+
+    Registers custom types for D-Bus.
+*/
+
+void XTransactionManager::registerTypes()
+{
+    qDBusRegisterMetaType<SsuRepo>();
+    qDBusRegisterMetaType<QList<SsuRepo>>();
+}
+
+/*!
     \fn XTransaction *XTransactionManager::addRepository(const QString &repoName, const QVariantHash &details, QObject *parent)
 
     \a repoName \a details \a parent
@@ -135,6 +149,17 @@ XTransaction *XTransactionManager::setRepositoryEnabled(const QString &repoName,
             : XSsuTransaction::SsuRepoAction::Disable;
     t->setRequestDetails({
                              {QStringLiteral("repoName"), repoName},
+                             {QStringLiteral("action"), QVariant::fromValue(action)},
+                         });
+    return t;
+}
+
+XTransaction *XTransactionManager::listRepos(bool rnd, QObject *parent)
+{
+    XTransaction *t = createTransaction<XSsuTransaction>(QStringLiteral("listRepositories"), parent);
+    const XSsuTransaction::SsuRepoAction action = XSsuTransaction::SsuRepoAction::List;
+    t->setRequestDetails({
+                             {QStringLiteral("rnd"), rnd},
                              {QStringLiteral("action"), QVariant::fromValue(action)},
                          });
     return t;
